@@ -1,0 +1,71 @@
+   <svg width="150" height="50" viewBox="0 0 150 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Red bar -->
+  <rect x="10" y="15" width="20" height="20" fill="#FF0000" rx="5">
+    <!-- Horizontal wave motion -->
+    <animateTransform
+      attributeName="transform"
+      type="translate"
+      values="0 0; 10 0; 0 0"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+    <!-- Scaling effect -->
+    <animateTransform
+      attributeName="transform"
+      type="scale"
+      values="1;1.15;1"
+      dur="1s"
+      repeatCount="indefinite"
+      additive="sum"
+      keySplines="0.5 0 0.5 1"
+    />
+  </rect>
+  
+  <!-- Orange bar -->
+  <rect x="50" y="15" width="20" height="20" fill="#FFA500" rx="5">
+    <!-- Horizontal wave motion -->
+    <animateTransform
+      attributeName="transform"
+      type="translate"
+      values="0 0; 10 0; 0 0"
+      dur="1.5s"
+      begin="0.3s"
+      repeatCount="indefinite"
+    />
+    <!-- Scaling effect -->
+    <animateTransform
+      attributeName="transform"
+      type="scale"
+      values="1;1.15;1"
+      dur="1s"
+      begin="0.3s"
+      repeatCount="indefinite"
+      additive="sum"
+      keySplines="0.5 0 0.5 1"
+    />
+  </rect>
+  
+  <!-- Purple bar -->
+  <rect x="90" y="15" width="20" height="20" fill="#800080" rx="5">
+    <!-- Horizontal wave motion -->
+    <animateTransform
+      attributeName="transform"
+      type="translate"
+      values="0 0; 10 0; 0 0"
+      dur="1.5s"
+      begin="0.6s"
+      repeatCount="indefinite"
+    />
+    <!-- Scaling effect -->
+    <animateTransform
+      attributeName="transform"
+      type="scale"
+      values="1;1.15;1"
+      dur="1s"
+      begin="0.6s"
+      repeatCount="indefinite"
+      additive="sum"
+      keySplines="0.5 0 0.5 1"
+    />
+  </rect>
+</svg>
