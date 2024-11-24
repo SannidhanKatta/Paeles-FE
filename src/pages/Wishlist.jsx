@@ -156,7 +156,7 @@ const WishList = () => {
                           }}
                           className="text-center cursor-pointer"
                         >
-                          Remov
+                          <MdOutlineDelete size={24} />
                         </td>
                       </tr>
                     );
