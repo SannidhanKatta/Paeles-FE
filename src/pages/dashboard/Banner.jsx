@@ -133,9 +133,9 @@ const Banner = () => {
       formData.append("name", slideNumber);
       formData.append("sliderImage", slideFile);
       formData.append("link", slideLink);
-      formData.append("title", slideTitle);
-      formData.append("description", slideDescription);
-      formData.append("buttonContent", slideButtonContent);
+      // formData.append("title", slideTitle);
+      // formData.append("description", slideDescription);
+      // formData.append("buttonContent", slideButtonContent);
 
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/slider`,
@@ -146,7 +146,7 @@ const Banner = () => {
           },
         }
       );
-
+      console.log(response.data);
       toast.success(response.data.message);
       getSliders(); // Fetch sliders again to update the UI
     } catch (error) {
