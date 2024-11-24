@@ -10,7 +10,7 @@ import { MainAppContext } from "@/context/MainContext";
 import { useAuth } from "@/context/AuthContext";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axios from "axios";
-
+import { mainlogo } from "../../public/index.js";
 const NavList = [
   {
     id: 1,
@@ -220,7 +220,7 @@ const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
           <img
-            src="/mainLogo.png"
+            src={mainlogo}
             className="w-[100px] md:w-[150px]"
             alt="PAELES"
           />

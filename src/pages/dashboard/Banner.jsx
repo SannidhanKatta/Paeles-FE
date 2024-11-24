@@ -133,6 +133,10 @@ const Banner = () => {
       formData.append("name", slideNumber);
       formData.append("sliderImage", slideFile);
       formData.append("link", slideLink);
+      console.log(slideFile)
+      for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
       // formData.append("title", slideTitle);
       // formData.append("description", slideDescription);
       // formData.append("buttonContent", slideButtonContent);

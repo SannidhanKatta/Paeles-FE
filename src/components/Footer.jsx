@@ -6,8 +6,8 @@ const Footer = () => {
     <footer class="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
       <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
         <div class="sm:flex sm:items-center sm:justify-between">
-          <a href="http://localhost:5173/about" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
-            <img src="/mainLogo.png" class="h-12" alt="Flowbite Logo" />
+          <a href="/about" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+            <img src="/mainLogo.png" class="h-12" alt="Paeles Logo" />
           </a>
           <div class="flex mt-4 sm:justify-center sm:mt-0">
             <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
@@ -43,7 +43,7 @@ const Footer = () => {
           </div>
         </div>
         <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024-25    <a href="http://localhost:5173/about" class="hover:underline">Paeles</a>. All Rights Reserved.</span>
+        <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024-25    <a href="/about" class="hover:underline">Paeles</a>. All Rights Reserved.</span>
       </div>
     </footer>
 
