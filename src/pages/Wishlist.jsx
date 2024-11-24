@@ -147,9 +147,11 @@ const WishList = () => {
                           onClick={() => {
                             handleRemoveWishlist(item.productId?._id);
                           }}
-                          className="text-center cursor-pointer text-red-500 flex justify-center items-center"
+                          className="text-center cursor-pointer text-red-500"
                         >
-                          <MdOutlineDelete size={24} />
+                          <div className="flex justify-center items-center">
+                            <MdOutlineDelete size={24} />
+                          </div>
                         </td>
 
                       </tr>
