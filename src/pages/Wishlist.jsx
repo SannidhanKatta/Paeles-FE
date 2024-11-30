@@ -146,14 +146,18 @@ const WishList = () => {
                         <td
                           onClick={() => {
                             handleRemoveWishlist(item.productId?._id);
+                            // const newArray = wishlistedProducts.filter(
+                            //   (obj) =>
+                            //     obj?.productId?.id !== item?.productId?.id
+                            // );
+                            // setWishlist(newArray);
+                            // setWishlistedProducts(newArray);
+                            // toast.error("Product Removed from Wishlist");
                           }}
-                          className="text-center cursor-pointer text-red-500"
+                          className="text-center cursor-pointer"
                         >
-                          <div className="flex justify-center items-center">
-                            <MdOutlineDelete size={24} />
-                          </div>
+                          <MdOutlineDelete className="text-gray-800 text-xl hover:text-red-700 mx-auto" />
                         </td>
-
                       </tr>
                     );
                   })}

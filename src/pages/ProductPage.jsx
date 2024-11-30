@@ -45,14 +45,14 @@ const ProductPage = ({ }) => {
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
   const [attributesArr, setAttributesArr] = useState({});
-  const [is360, setIs360] = useState(false);
+  // const [is360, setIs360] = useState(false);
   const [rating, setRating] = useState(0);
   const [price, setPrice] = useState(0);
   const [minprice, setMinPrice] = useState(0);
   const [maxprice, setMaxPrice] = useState(0);
   const [shouldDisableButton, setShouldDisableButton] = useState(true);
   const [display, setDisplay] = useState(false);
-  const [ARSupported, setARSupported] = useState(false);
+  // const [ARSupported, setARSupported] = useState(false);
   const [annotate, setAnnotate] = useState(false);
   const navigate = useNavigate();
   const { currency, cart, setCart, wishlist, setWishlist } =
@@ -68,19 +68,21 @@ const ProductPage = ({ }) => {
 
   useEffect(() => {
     console.log(selectedSize)
-  }, [selectedSize])
-  useEffect(() => {
-    const userAgent = navigator.userAgent;
-    console.log(userAgent);
-    if (
-      /iPhone|webOS|Android|iPad|iPod|BlackBerry|Windows Phone/i.test(userAgent)
-    ) {
-      console.log("AR Supported");
-      setARSupported(true);
-    } else {
-      console.log("AR Not Supported");
-    }
-  }, [ARSupported]);
+  }, [selectedSize]);
+  // useEffect(() => {
+  //   const userAgent = navigator.userAgent;
+  //   console.log(userAgent);
+  //   if (
+  //     /iPhone|webOS|Android|iPad|iPod|BlackBerry|Windows Phone/i.test(userAgent)
+  //   ) {
+  //     console.log("AR Supported");
+  //     setARSupported(true);
+  //   } else {
+  //     console.log("AR Not Supported");
+  //   }
+  // }, [ARSupported]);
+
+
 
   useEffect(() => {
     gsap.from('.fade-in', { duration: 1, opacity: 0, y: 50 });
@@ -409,52 +411,37 @@ const ProductPage = ({ }) => {
                       className="h-full w-full object-cover cursor-pointer border border-black"
                     />
                   </div>
-                  <div className=" raleway grid grid-cols-4 gap-1">
-                    {!is360 && (
-                      <>
-                        <img
-                          onClick={() => {
-                            SetActiveImage(product?.mainImage);
-                          }}
-                          src={product?.mainImage}
-                          alt={"mainImage"}
-                          className={`${activeImage === product?.mainImage
-                            ? "opacity-40 border-[2px] border-orange-400 "
-                            : " cursor-pointer"
-                            } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
-                        />{" "}
-                      </>
-                    )}
-                    {!is360 && (
-                      <>
-                        {product?.additionalImages &&
-                          product?.additionalImages
-                            .slice(0, 3)
-                            .map((image, index) => (
-                              <img
-                                key={index}
-                                onClick={() => {
-                                  SetActiveImage(image);
-                                }}
-                                src={image}
-                                alt={"product-pics"}
-                                className={`${activeImage === image
-                                  ? "opacity-40 border-[2px] border-orange-400 "
-                                  : " cursor-pointer"
-                                  } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
-                              />
-                            ))}
-                      </>
-                    )}
-                  </div>
-                  {is360 && (
-                    <IoCloseCircle
-                      onClick={() => {
-                        setIs360(false);
-                      }}
-                      className=" absolute text-[30px] cursor-pointer top-0 right-2"
-                    />
-                  )}
+                    <div className="raleway grid grid-cols-4 gap-1">
+                      {/* Main image */}
+                      <img
+                        onClick={() => {
+                          SetActiveImage(product?.mainImage);
+                        }}
+                        src={product?.mainImage}
+                        alt={"mainImage"}
+                        className={`${activeImage === product?.mainImage
+                            ? "opacity-40 border-[2px] border-orange-400"
+                            : "cursor-pointer"
+                          } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
+                      />
+
+                      {/* Additional images */}
+                      {product?.additionalImages &&
+                        product?.additionalImages.slice(0, 3).map((image, index) => (
+                          <img
+                            key={index}
+                            onClick={() => {
+                              SetActiveImage(image);
+                            }}
+                            src={image}
+                            alt={"product-pics"}
+                            className={`${activeImage === image
+                                ? "opacity-40 border-[2px] border-orange-400"
+                                : "cursor-pointer"
+                              } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
+                          />
+                        ))}
+                    </div>
 
                   <div className="w-full">
                     <div className=" grid grid-cols-1 lg:grid-cols-2 lg:gap-5">
