@@ -72,7 +72,6 @@ const Checkout = () => {
       customerId: customerId,
       phone: phoneCode1 + phone,
     };
-    lightGreen(userDetailsUpdated);
     const response = await fetch(
       `${import.meta.env.VITE_SERVER_URL}/order/stripe-checkout`,
       {
@@ -87,15 +86,15 @@ const Checkout = () => {
         }),
       }
     );
-
     const session = await response.json();
+    console.log(session);
 
     // Redirect to Stripe Checkout page
     setLoading(false);
     const result = await stripe.redirectToCheckout({
       sessionId: session.id,
     });
-
+    console.log(result);
     if (result.error) {
       console.error("Error redirecting to Stripe Checkout:", result.error);
       // Handle error
@@ -578,67 +577,7 @@ const Checkout = () => {
           </div>
 
           <div className="  mt-4">
-            <h4 className=" text-[16px] md:text-[18px] 2xl:text-[20px] font-[700] plus-jakarta text-[#363F4D] dark:text-gray-400     underline underline-offset-3 mt-4 md:m-0 mb-1.5 ">
-              Payment Method
-            </h4>
             <div className=" flex flex-col p-5 bg-[#F2F2F2] dark:bg-white/5">
-              <div className=" flex items-center gap-2 ">
-                <input
-                  name="State*"
-                  id="State*"
-                  type="radio"
-                  value={"card"}
-                  onClick={(e) => {
-                    setPaymentMode(e.target.value);
-                  }}
-                  className=" border-[1.4px] border-[#999999] dark:bg-transparent p-2 text-[#7A7A7A] text-[14.4px]"
-                  placeholder="State*"
-                />
-                <label
-                  className=" text-[#363F4D] dark:text-gray-400 font-[400] text-[12px] md:text-[13px] 2xl:text-[14.4px] mb-1 "
-                  htmlFor="State*"
-                >
-                  Pay with Credit/Debit card
-                </label>
-              </div>
-              <div className=" flex items-center gap-2 ">
-                <input
-                  name="State*"
-                  id="State*"
-                  type="radio"
-                  value={"installment"}
-                  onClick={(e) => {
-                    setPaymentMode(e.target.value);
-                  }}
-                  className=" border-[1.4px] border-[#999999] dark:bg-transparent p-2 text-[#7A7A7A] text-[14.4px]"
-                  placeholder="State*"
-                />
-                <label
-                  className=" text-[#363F4D] dark:text-gray-400 font-[400] text-[12px] md:text-[13px] 2xl:text-[14.4px] mb-1 "
-                  htmlFor="State*"
-                >
-                  Pay in 4 installments
-                </label>
-              </div>
-              <div className=" flex items-center gap-2 ">
-                <input
-                  name="State*"
-                  id="State*"
-                  type="checkbox"
-                  checked={isTnCAccepted}
-                  onChange={() => {
-                    setIsTnCAccepted(!isTnCAccepted);
-                  }}
-                  className=" border-[1.4px] border-[#999999] dark:bg-transparent p-2 text-[#7A7A7A] text-[14.4px]"
-                  placeholder="State*"
-                />
-                <label
-                  className=" text-[#7A7A7A] font-[400] text-[12px] md:text-[13px] 2xl:text-[14.4px] mb-1 "
-                  htmlFor="State*"
-                >
-                  I’ve read and accept the terms & conditions
-                </label>
-              </div>
             </div>
             {loading ? (
               <div className=" w-full flex items-center justify-center py-3">
@@ -650,23 +589,9 @@ const Checkout = () => {
               </div>
             ) : (
               <button
-                disabled={
-                  !isTnCAccepted ||
-                  paymentMode === "" ||
-                  paymentMode === "installment"
-                }
                 className=" bg-[#363F4D] disabled:bg-gray-400 disabled:border-gray-400  border-[1.4px] border-[#363F4D] px-4 py-2.5 font-medium uppercase text-[13px] text-white mt-6 "
-                onClick={() => {
-                  // console.log(cart);
-                  setOrders(cart);
-                  handleIPGCheckout(
-                    userDetails,
-                    customerId,
-                    phoneCode1,
-                    phone,
-                    total
-                  );
-                }}
+                onClick={handleStripeCheckout}
+                disabled={loading}
               >
                 Place order
               </button>
