@@ -203,83 +203,7 @@ const Home = () => {
         })}
       </div>
 
-      {/* <div className=" w-full grid grid-cols-1 md:grid-cols-4 px-[8%]">
-        {backgrounds.map((background, index) => {
-          return (
-            <div
-              key={index}
-              className={` ${index === 1 ? "col-span-2" : "col-span-1"}`}
-            >
-              {background.link ? (
-                <Link to={background.link}>
-                  <div
-                    className={` w-full relative ${
-                      index === 1 ? "col-span-2" : "col-span-1"
-                    } ${background.extraClass}`}
-                  >
-                    <img
-                      className={`h-[300px]  ${
-                        index === 1 ? "col-span-2" : "col-span-1"
-                      } w-full 2xl:h-[360px]`}
-                      src={background.image}
-                      alt="card-img"
-                    />
-                    <div
-                      className={` absolute top-0 left-0 text-white w-full h-full flex flex-col pt-7 pl-4  ${background.extraClass} `}
-                    >
-                      <p className=" text-[13.5px] 2xl:text-[14px]">
-                        {background.text}
-                      </p>
-                      <p className=" text-[20px] 2xl:text-[24px] mt-1.5 mb-2">
-                        {background.describe}
-                      </p>
-                      <p className=" w-[20%] bg-white h-[2px] rounded-full mb-4 "></p>
-                      <p className=" text-[12px] 2xl:text-[14px]">
-                        {background.sale}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ) : (
-                <div className={` w-full relative ${background.extraClass}`}>
-                  <img
-                    className="h-[300px] w-full 2xl:h-[360px]"
-                    src={background.image}
-                    alt="card-img"
-                  />
-                  <div
-                    className={` absolute top-0 left-0 text-white w-full h-full flex flex-col pt-7 pl-4  ${background.extraClass} `}
-                  >
-                    <p className=" text-[13.5px] 2xl:text-[14px]">
-                      {background.text}
-                    </p>
-                    <p className=" text-[20px] 2xl:text-[24px] mt-1.5 mb-2">
-                      {background.describe}
-                    </p>
-                    <p className=" w-[20%] bg-white h-[2px] rounded-full mb-4 "></p>
-                    <p className=" text-[12px] 2xl:text-[14px]">
-                      {background.sale}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div> */}
-      {/* <a href="intent://arvr.google.com/scene-viewer/1.0?file=https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;">
-        Avocado
-      </a>
-      <a href="intent://arvr.google.com/scene-viewer/1.0?file=https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;">
-        Avocado
-      </a>
-      ;
-      <model-viewer
-        ar
-        ar-modes="scene-viewer webxr quick-look"
-        alt=" A 3D model of an astronaut."
-        src="/3dmodel.usdz"
-      ></model-viewer> */}
+
       <div className=" dark:text-gray-400 flex flex-col items-center lg:grid xl:grid-cols-4 gap-6 px-[4%] xl:px-[8%] py-4 mt-5 ">
         <div className=" flex flex-col items-center col-span-4">
           <p className=" text-[24px] md:text-[28px] 2xl:text-[32px] font-[700] plus-jakarta text-[#212121] dark:text-gray-400 ">
@@ -346,95 +270,7 @@ const Home = () => {
               On Sales
             </span>
           </div>
-          {/* <div className=" w-full py-1 flex items-center justify-end px-[4%] xl:px-[8%] ">
-            <Link
-              to={`/shop/${filteredCategory}`}
-              className=" text-sm font-semibold text-gray-500 flex items-center justify-end w-full"
-            >
-              See More <MdArrowRight className=" text-[19px]" />
-            </Link>
-          </div> */}
-          {/* </div> */}
-          {/*  */}
-          {/* 
-        {filteredProducts
-          ?.filter((e) => {
-            return (
-              e?.approved &&
-              (e.superCategory || e.mainCategory === filteredCategory)
-            );
-          })
-          .slice(0, 8)?.length > 0 ? (
-          <>
-            {filteredProducts
-              ?.filter((e) => {
-                return (
-                  e?.approved &&
-                  (e.superCategory || e.mainCategory === filteredCategory)
-                );
-              })
-              .slice(0, 8)
-              .map((pro, index) => (
-                <div
-                  key={index}
-                  className=" relative 2xl:flex 2xl:flex-col 2xl:items-center 2xl:justify-center w-fit mx-auto "
-                >
-                  <div className=" absolute top-3  left-3  flex flex-col gap-2 ">
-                    {pro?.dis && (
-                      <div className="  px-2 py-0.5 text-sm bg-[#FF7004] text-white ">
-                        {pro?.dis}
-                      </div>
-                    )}
-                    {pro?.tag && (
-                      <div className="  px-2 py-0.5 text-sm bg-[#007A58] text-white ">
-                        {pro.tag}
-                      </div>
-                    )}
-                  </div>
-                  <div className="absolute top-3 right-3 ">
-                    {wishlistedProducts.find((i) => {
-                      return i?.productId?._id === pro?._id;
-                    }) ? (
-                      <IoHeartCircle
-                        onClick={() => {
-                          handleRemoveWishlist(pro?._id);
-                        }}
-                        className={` cursor-pointer hover:text-red-500 text-[25px] text-red-500`}
-                      />
-                    ) : (
-                      <IoHeartCircle
-                        onClick={() => {
-                          handleAddToWishlist(pro?._id);
-                        }}
-                        className={` cursor-pointer hover:text-red-500 text-[25px] text-gray-600`}
-                      />
-                    )}
-                  </div>
 
-                  <Link
-                    to={`/product/${pro?._id}`}
-                    className=" flex items-center "
-                  >
-                    <img
-                      className=" h-[220px] w-full lg:h-[250px] xl:h-[310px] "
-                      src={pro.mainImage}
-                      alt="product-img"
-                    />
-                  </Link>
-                  <p className=" text-center  font-[500] mt-2 mb-1">
-                    {pro.title}
-                  </p>
-                  <p className=" text-sm md:text-base text-center">
-                    {pro.currency} {pro.price}
-                  </p>
-                </div>
-              ))}
-          </>
-        ) : (
-          <p className=" text-center text-xs w-full sm:text-sm">
-            No products available in this category
-          </p>
-        )} */}
         </div>
       </div>
       <div className="w-full col-span-4">
@@ -506,22 +342,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {/* <div className=" grid grid-cols-1 md:grid-cols-2 gap-6 2xl:gap-20 px-[8%] py-4 ">
-        <img
-          className=" col-span-1 w-full "
-          src={`${
-            banners[3]?.filePath ? banners[3]?.filePath : "/Images/banner1.png"
-          }`}
-          alt="banner-img"
-        />
-        <img
-          className=" col-span-1 w-full "
-          src={`${
-            banners[4]?.filePath ? banners[4]?.filePath : "/Images/banner2.png"
-          }`}
-          alt="banner-img"
-        />
-      </div> */}
+
       <div className=" relative text-white overflow-x-hidden w-full h-[300px] md:h-[530px] flex flex-col items-center justify-center ">
         <img
           className=" w-full h-full object-cover"
@@ -563,19 +384,9 @@ const Home = () => {
         </p>
       </div>
       <NewsSlider />
-      <div className=" relative text-white w-full h-[150px] md:h-[250px] px-[4%] md:px-[12%] flex flex-col items-center justify-center ">
-        {/* <img
-          className=" w-full h-full object-contain"
-          src={`${banners[3]?.filePath
-            ? banners[3]?.filePath
-            : "/main/mainBanner3.svg"
-            }`}
-          alt="slide-Image"
-        /> */}
-      </div>
+
     </section>
   );
 };
 
 export default Home;
-

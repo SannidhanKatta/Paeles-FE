@@ -57,9 +57,9 @@ const Banner = () => {
     formData.append("banner", bannerFile);
     formData.append("fileName", bannerNumber);
     formData.append("redirectUrl", bannerLink);
-    formData.append("title", bannerTitle);
-    formData.append("description", bannerDescription);
-    formData.append("buttonContent", bannerButtonContent);
+    // formData.append("title", bannerTitle);
+    // formData.append("description", bannerDescription);
+    // formData.append("buttonContent", bannerButtonContent);
 
     try {
       const response = await axios.post(
