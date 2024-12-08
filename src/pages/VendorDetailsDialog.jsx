@@ -12,7 +12,9 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
     id: data?.customer?._id,
     name: data?.customer?.name || "",
     email: data?.customer?.email || "",
-    address: data?.customer?.address || "",
+    address: `${data?.customer?.address},${data.customer?.city},${data.customer?.state},${data.customer?.country},${data.customer?.zipCode}` || "",
+    phone: data?.customer?.phone || "",
+
   });
 
   const updateDetails = async () => {
@@ -47,12 +49,12 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
             <div>
               <div className=" flex items-center mb-3  gap-4">
                 <h2 className=" font-bold plus-jakarta text-xl ">{heading}</h2>
-                <FiEdit
+                {/* <FiEdit
                   onClick={() => {
                     setIsEditOrder((prev) => (prev === true ? false : true));
                   }}
                   className=" text-[17px] md:text-[20px] cursor-pointer"
-                />
+                /> */}
               </div>
               {data?._id && (
                 <p>
@@ -85,61 +87,52 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                 <span className=" text-sm md:text-md font-semibold mr-1">
                   Name:
                 </span>
-                <input
-                  type="text"
-                  autoFocus="on"
-                  disabled={!isEditOrder}
-                  className=" border border-blue-500 disabled:border-none rounded-md py-2 px-4 disabled:bg-transparent bg-gray-200 mt-1"
-                  value={customerDetails.name}
-                  onChange={(e) =>
-                    setCustomerDetails({
-                      ...customerDetails,
-                      name: e.target.value,
-                    })
-                  }
-                />
+                <p
+                className=" py-2 px-4 inline mt-1"
+                >
+                  {customerDetails.name}
+                </p>
               </p>
               <p>
                 <span className=" text-sm md:text-md font-semibold mr-1">
                   Email:
                 </span>
-                <input
-                  type="text"
-                  disabled={!isEditOrder}
-                  className=" border border-blue-500 disabled:border-none rounded-md py-2 px-4 bg-gray-200 disabled:bg-transparent mt-1"
-                  value={customerDetails.email}
-                  onChange={(e) =>
-                    setCustomerDetails({
-                      ...customerDetails,
-                      email: e.target.value,
-                    })
-                  }
-                />
+                <p
+                className=" py-2 px-4 inline mt-1"
+                >
+                  {customerDetails.email}
+                </p>
               </p>
               <p>
                 <span className=" text-sm md:text-md font-semibold mr-1">
-                  Address:
+                  address:
                 </span>
-                <input
-                  type="text"
-                  className=" border border-blue-500 disabled:border-none rounded-md py-2 px-4 disabled:bg-transparent bg-gray-200 mt-1"
-                  disabled={!isEditOrder}
-                  value={customerDetails.address}
-                  onChange={(e) =>
-                    setCustomerDetails({
-                      ...customerDetails,
-                      address: e.target.value,
-                    })
-                  }
-                />
+                <p
+                className=" py-2 px-4 inline mt-1"
+                >
+                  {customerDetails.address}
+                </p>
               </p>
+              <p>
+                <span className=" text-sm md:text-md font-semibold mr-1">
+                  Phone:
+                </span>
+                <p
+                className=" py-2 px-4 inline mt-1"
+                >
+                  +{customerDetails.phone}
+                </p>
+              </p>
+
               <p className=" mt-5 font-bold plus-jakarta">Order Details</p>
               {data?.products?.map((product, index) => {
+                console.log(product);
                 return (
                   <div
                     key={index}
                     className=" p-2 md:p-4 my-3 text-sm md:text-md shadow-md shadow-black/40"
                   >
+                    <img src={product?.product?.mainImage} className=" w-[100px]" />
                     <p>
                       <span className=" text-sm md:text-md font-semibold mr-1">
                         Name:
@@ -160,17 +153,15 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                     </p>
                     <p>
                       <span className=" text-sm md:text-md font-semibold mr-1">
-                        vendorId:
+                        selected size:
                       </span>
-                      {product?.product?.vendorId}
+                      {product?.selectedSize}
                     </p>
                     <p>
                       <span className=" text-sm md:text-md font-semibold mr-1">
-                        Attributes:
+                        quantity:
                       </span>
-                      {product?.product?.attributes.map((i, index) => (
-                        <span key={index}>{i?.value}</span>
-                      ))}
+                      {product?.quantity}
                     </p>
                   </div>
                 );

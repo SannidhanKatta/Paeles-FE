@@ -178,47 +178,6 @@ const Orders = () => {
 
       <div className=" flex flex-col mt-3 md:mt-7 overflow-x-auto rounded-md dark:bg-white/5 bg-white p-3 md:p-5 ">
         <div className="overflow-x-auto">
-          {/* <div className=" flex flex-col md:flex-row md:items-center justify-between">
-            <p className=" text-sm font-semibold">
-              We found {sortedArrayCount} items for you! 
-            </p>
-            <div className=" flex flex-col md:flex-row md:items-center gap-3 py-2">
-              <select
-                value={sortMethod}
-                onChange={(e) => {
-                  setSortMethod(e.target.value);
-                }}
-                className=" md:w-[250px] p-2 dark:bg-transparent dark:text-gray-400 text-[#4F5D77] font-semibold bg-[#f2f2f2] text-[12.5px] md:text-[14.4px]"
-              >
-                {sortMethods.map((method, index) => {
-                  return (
-                    <option
-                      key={index}
-                      value={method.value}
-                      className=" text-black"
-                    >
-                      {method.name}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                value={filterMethod}
-                onChange={(e) => {
-                  setFilterMethod(e.target.value);
-                }}
-                className=" w-full p-2 dark:bg-transparent dark:text-gray-400 text-[#4F5D77] bg-[#f2f2f2] font-semibold text-[12.5px] md:text-[14.4px]"
-              >
-                {filterMethods.map((method, index) => {
-                  return (
-                    <option key={index} value={method.value}>
-                      {method.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div> */}
           {dialog && (
             <VendorDetailsDialog
               close={closeDialog}
@@ -236,7 +195,6 @@ const Orders = () => {
                 <th className="py-2 px-4">Order Date</th>
                 <th className="py-2 px-4">Delivery Date</th>
                 <th className="py-2 px-4">Action</th>
-                <th className="py-2 px-4">Mail</th>
               </tr>
             </thead>
             <tbody className="">
@@ -262,23 +220,22 @@ const Orders = () => {
                         {item.customer.email}
                       </td>
                       <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
-                      ₹ {item.totalAmount}
+                        ₹ {item.totalAmount}
                       </td>
                       <td>
                         <select
-                          className={`text-center rounded-md py-1 w-full outline-none text-sm font-semibold ${
-                            item.status === "orderReceived"
+                          className={`text-center rounded-md py-1 w-full outline-none text-sm font-semibold ${item.status === "orderReceived"
                               ? "bg-orange-200 text-orange-700"
                               : item.status === "inProgress"
-                              ? "bg-green-200 text-green-700"
-                              : item.status === "qualityCheck"
-                              ? "bg-red-200 text-red-700"
-                              : item.status === "outForDelivery"
-                              ? "bg-blue-200 text-blue-700"
-                              : item.status === "orderDelivered"
-                              ? "bg-purple-200 text-purple-700"
-                              : "bg-purple-200 text-purple-700"
-                          }
+                                ? "bg-green-200 text-green-700"
+                                : item.status === "qualityCheck"
+                                  ? "bg-red-200 text-red-700"
+                                  : item.status === "outForDelivery"
+                                    ? "bg-blue-200 text-blue-700"
+                                    : item.status === "orderDelivered"
+                                      ? "bg-purple-200 text-purple-700"
+                                      : "bg-purple-200 text-purple-700"
+                            }
                           rounded-md py-1 w-full outline-none text-sm font-semibold`}
                           value={item?.status}
                           onChange={(e) =>
@@ -353,15 +310,7 @@ const Orders = () => {
                         >
                           View
                         </button>
-                      </td>
-                      <td className="  items-center gap-2 py-2 px-4">
-                        <Link to="/admindashboard/newsletter">
-                          <button className=" px-4 py-2.5 my-1 text-[22px] mx-auto font-medium  text-black dark:text-white">
-                            <IoMail />
-                          </button>
-                        </Link>
-                      </td>
-                    </tr>
+                      </td>                    </tr>
                   );
                 })}
             </tbody>

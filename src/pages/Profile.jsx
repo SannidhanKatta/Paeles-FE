@@ -138,7 +138,7 @@ const Orders = ({ userData }) => {
         );
 
         // Update the orders state with the fetched orders
-        // console.log(response.data.orders);
+        console.log("orders",response.data.orders);
         setOrders(response.data.orders);
         setLoading(false);
       } catch (error) {
@@ -159,13 +159,6 @@ const Orders = ({ userData }) => {
           {orders?.map((order, orderIndex) => (
             <div key={orderIndex}>
               {order?.products?.map((product, productIndex) => {
-                const modifiedMainImage = product.product.mainImage.startsWith(
-                  import.meta.env.VITE_SERVER_URL
-                )
-                  ? product.product.mainImage
-                  : `${
-                      import.meta.env.VITE_SERVER_URL
-                    }/${product.product.mainImage.replace(/\\/g, "/")}`;
                 return (
                   <div
                     className="flex flex-col md:flex-row md:justify-between w-full dark:bg-white/40 bg-gray-100 p-2 border-b border-gray-300"
@@ -184,11 +177,11 @@ const Orders = ({ userData }) => {
                       )}
                       <Link
                         className="flex items-center"
-                        to={`/product/${product.product._id}`}
+                        to={`/product/${product.product.title?.replace(/\//g, "").replace(/\s+/g, "-")}`}
                       >
                         <img
                           className="h-[100px] mr-4 w-[100px] object-cover"
-                          src={modifiedMainImage}
+                          src={product.product.mainImage}
                           alt="product-img"
                         />
                         <div className="flex flex-col">
@@ -216,7 +209,7 @@ const Orders = ({ userData }) => {
                             <span className="text-xs sm:text-sm font-medium">
                               Total:
                             </span>
-                            {item.quantity} x {currency}
+                            {product.quantity} x {currency}
                             {currency === "OMR"
                               ? (product.product.price * 1 * 0.1).toFixed(2)
                               : product.product.price * 1}
@@ -233,7 +226,7 @@ const Orders = ({ userData }) => {
                       >
                         Track Order
                       </button>
-                      {order?.status?.toLowerCase() === "received" && (
+                      {order?.status?.toLowerCase() === "orderdelivered" && (
                         <button
                           onClick={() => {
                             setIsRatingFormOpen(true);

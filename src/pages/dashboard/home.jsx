@@ -206,8 +206,7 @@ export function Home() {
       value: totalUsers,
       footer: {
         color: "text-green-500",
-        value: `${totalUsers - totalVendors} users`,
-        label: `${totalVendors} vendors`,
+        value: `${totalUsers} users`,
       },
     },
     {

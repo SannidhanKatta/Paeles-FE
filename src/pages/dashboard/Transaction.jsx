@@ -15,6 +15,7 @@ const Transactions = () => {
           `${import.meta.env.VITE_SERVER_URL}/order/getAllPayments`
         );
         setTransactions(response.data.payments);
+        console.log(response.data.payments);
       } catch (error) {
         console.error("Error fetching transactions:", error);
       }
@@ -83,7 +84,12 @@ const Transactions = () => {
                       {transaction.paymentMethod}
                     </td>
                     <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
-                      {transaction.createdAt}
+                      {new Date(transaction.createdAt).toLocaleDateString("en-US", {
+                        weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                  })}
                     </td>
                   </tr>
                 ))}
