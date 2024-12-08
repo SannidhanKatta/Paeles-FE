@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { DashboardAppContext } from "../../context/DashboardContext";
 import { sortMethods, sortProducts } from "../../utilities/SortMethod";
 import VendorDetailsDialog from "../VendorDetailsDialog";
-import { IoMail, IoMoonSharp } from "react-icons/io5";
+import { IoMoonSharp } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -103,10 +103,15 @@ const Orders = () => {
       setOrders(response.data.orders);
       const initialDeliveryDates = {};
       response.data.orders.forEach((order) => {
-        initialDeliveryDates[order._id] = "";
+        if (order.deliveryDate) {
+          const date = new Date(order.deliveryDate);
+          const formattedDate = date.toISOString().split('T')[0];
+          initialDeliveryDates[order._id] = formattedDate;
+        } else {
+          initialDeliveryDates[order._id] = '';
+        }
       });
       setDeliveryDates(initialDeliveryDates);
-      // console.log(response.data.orders);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -115,17 +120,23 @@ const Orders = () => {
   const handleUpdateDelivery = async (orderId) => {
     try {
       const deliveryDate = deliveryDates[orderId];
+      if (!deliveryDate) {
+        toast.error("Please select a delivery date");
+        return;
+      }
+
       await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/admin/updateDelivery`,
         {
           orderId,
-          deliveryDate,
+          deliveryDate: new Date(deliveryDate).toISOString(),
         }
       );
       toast.success("Delivery date updated successfully!");
-      // console.log("Delivery date updated successfully!");
+      getAllOrders();
     } catch (error) {
       console.error("Error updating delivery date:", error);
+      toast.error("Failed to update delivery date");
     }
   };
 
@@ -158,10 +169,9 @@ const Orders = () => {
     orders.filter((i) => {
       if (filterMethod !== "") {
         return i.status.toLowerCase() === filterMethod.toLowerCase();
-      } else {
-        return i;
       }
-    }) / pageSize
+      return true;
+    }).length / pageSize
   );
 
   // Function to handle changing the page
@@ -236,7 +246,6 @@ const Orders = () => {
                 <th className="py-2 px-4">Order Date</th>
                 <th className="py-2 px-4">Delivery Date</th>
                 <th className="py-2 px-4">Action</th>
-                <th className="py-2 px-4">Mail</th>
               </tr>
             </thead>
             <tbody className="">
@@ -262,23 +271,22 @@ const Orders = () => {
                         {item.customer.email}
                       </td>
                       <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
-                      ₹ {item.totalAmount}
+                        ₹ {item.totalAmount}
                       </td>
                       <td>
                         <select
-                          className={`text-center rounded-md py-1 w-full outline-none text-sm font-semibold ${
-                            item.status === "orderReceived"
-                              ? "bg-orange-200 text-orange-700"
-                              : item.status === "inProgress"
+                          className={`text-center rounded-md py-1 w-full outline-none text-sm font-semibold ${item.status === "orderReceived"
+                            ? "bg-orange-200 text-orange-700"
+                            : item.status === "inProgress"
                               ? "bg-green-200 text-green-700"
                               : item.status === "qualityCheck"
-                              ? "bg-red-200 text-red-700"
-                              : item.status === "outForDelivery"
-                              ? "bg-blue-200 text-blue-700"
-                              : item.status === "orderDelivered"
-                              ? "bg-purple-200 text-purple-700"
-                              : "bg-purple-200 text-purple-700"
-                          }
+                                ? "bg-red-200 text-red-700"
+                                : item.status === "outForDelivery"
+                                  ? "bg-blue-200 text-blue-700"
+                                  : item.status === "orderDelivered"
+                                    ? "bg-purple-200 text-purple-700"
+                                    : "bg-purple-200 text-purple-700"
+                            }
                           rounded-md py-1 w-full outline-none text-sm font-semibold`}
                           value={item?.status}
                           onChange={(e) =>
@@ -325,7 +333,7 @@ const Orders = () => {
                         <input
                           type="date"
                           className="mr-2"
-                          value={deliveryDates[item._id]}
+                          value={deliveryDates[item._id] || ''}
                           onChange={(e) =>
                             setDeliveryDates({
                               ...deliveryDates,
@@ -354,67 +362,59 @@ const Orders = () => {
                           View
                         </button>
                       </td>
-                      <td className="  items-center gap-2 py-2 px-4">
-                        <Link to="/admindashboard/newsletter">
-                          <button className=" px-4 py-2.5 my-1 text-[22px] mx-auto font-medium  text-black dark:text-white">
-                            <IoMail />
-                          </button>
-                        </Link>
-                      </td>
                     </tr>
                   );
                 })}
             </tbody>
           </table>
-          <div class="flex items-center justify-end gap-8">
+          <div className="flex items-center justify-end gap-8">
             <button
               disabled={currentPage === 1}
               onClick={() => handlePageChange(currentPage - 1)}
-              class="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
-              <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="2"
+                  strokeWidth="2"
                   stroke="currentColor"
                   aria-hidden="true"
-                  class="w-4 h-4"
+                  className="w-4 h-4"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
                   ></path>
                 </svg>
               </span>
             </button>
             <p className="block font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-              Page <strong className="text-gray-900">{currentPage}</strong> of
-              <strong className="text-gray-900">{totalPages}</strong>
+              Page <strong className="text-gray-900">{currentPage}</strong> of{" "}
+              <strong className="text-gray-900">{totalPages || 1}</strong>
             </p>
-
             <button
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => handlePageChange(currentPage + 1)}
               className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
-              <span class="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="2"
+                  strokeWidth="2"
                   stroke="currentColor"
                   aria-hidden="true"
-                  class="w-4 h-4"
+                  className="w-4 h-4"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
                   ></path>
                 </svg>

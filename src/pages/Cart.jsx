@@ -61,117 +61,168 @@ const Cart = () => {
     if (userLoggedIn) {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/cart/${userDetails?._id || userId
-          }`
+          `${import.meta.env.VITE_SERVER_URL}/cart/${userDetails?._id || userId}`
         );
-        console.log(response.data);
-        console.log(response.data.cart.products)
         setCart(response.data.cart.products);
-        setCartCount(
-          response.data.cart.products?.length !== 0
-            ? response.data.cart.products?.length
-            : 0
-        );
-        // // console.log(response.data.cart.products);
+        setCartCount(response.data.cart.products?.length);
         if (response.data.cart.products?.length > 0) {
           const total1 = response.data.cart.products.reduce(
             (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
             0
           );
-
           setTotal(total1);
           if (response.data.cart.couponDiscountedTotal != 0) {
             setDiscountAmt(total1 - response.data.cart.couponDiscountedTotal);
           }
         }
-        // Handle success response, if needed
       } catch (error) {
         console.error("Error Fetching Cart", error);
+      }
+    } else {
+      // Get cart from localStorage for non-logged in users
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCart(localCart);
+      setCartCount(localCart.length);
+      if (localCart.length > 0) {
+        const total1 = localCart.reduce(
+          (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
+          0
+        );
+        setTotal(total1);
       }
     }
   };
 
   const addToCart = async (userId, productId, quantity) => {
-    console.log(quantity, productId);
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/cart/addProduct`,
-        {
-          userId: userId,
-          productId: productId,
-          quantity: quantity,
+    if (userLoggedIn) {
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/cart/addProduct`,
+          {
+            userId: userId,
+            productId: productId,
+            quantity: quantity,
+          }
+        );
+        getCart(userId);
+        toast.success("Product Added to Cart");
+      } catch (error) {
+        console.error("Error adding product to cart:", error);
+        toast.error("Failed to add product to cart");
+      }
+    } else {
+      // Handle local storage cart
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingProduct = localCart.find(item => item.productId._id === productId);
+
+      if (existingProduct) {
+        existingProduct.quantity = quantity;
+      } else {
+        // Fetch product details before adding to cart
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/${productId}`);
+          localCart.push({
+            productId: response.data.product,
+            quantity: quantity,
+            updatedPrice: response.data.product.price
+          });
+        } catch (error) {
+          console.error("Error fetching product details:", error);
+          toast.error("Failed to add product to cart");
+          return;
         }
-      );
-      // // // console.log(response.data.cart);
-      getCart(userId);
+      }
+
+      localStorage.setItem("cart", JSON.stringify(localCart));
+      setCart(localCart);
+      setCartCount(localCart.length);
       toast.success("Product Added to Cart");
-      // Handle success response, if needed
-    } catch (error) {
-      console.error("Error adding product to cart:", error);
-      toast.error("Failed to add product to cart");
-      // Handle error
     }
   };
 
   const increaseQuantityOfProduct = async (userId, productId, selectedSize) => {
-    try {
-      // API call to increment the product quantity
-      const response = await axios.put(
-        `${import.meta.env.VITE_SERVER_URL}/cart/increaseQuantity`,
-        {
-          userId: userId,
-          productId: productId,
-          selectedSize: selectedSize, // Send the selected size
-        }
-      );
-
-      // Refresh the cart after a successful operation
-      getCart(userId);
-      toast.success("Product quantity increased");
-    } catch (error) {
-      console.error("Error increasing product quantity:", error);
-      if (error.response && error.response.data.message) {
-        toast.error(error.response.data.message); // Show specific error from server
-      } else {
-        toast.error("Failed to increase product quantity");
+    if (userLoggedIn) {
+      try {
+        const response = await axios.put(
+          `${import.meta.env.VITE_SERVER_URL}/cart/increaseQuantity`,
+          {
+            userId: userId,
+            productId: productId,
+            selectedSize: selectedSize,
+          }
+        );
+        getCart(userId);
+        toast.success("Product quantity increased");
+      } catch (error) {
+        console.error("Error increasing product quantity:", error);
+        toast.error(error.response?.data?.message || "Failed to increase product quantity");
+      }
+    } else {
+      // Handle local storage cart
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const product = localCart.find(item => item.productId._id === productId);
+      if (product) {
+        product.quantity += 1;
+        localStorage.setItem("cart", JSON.stringify(localCart));
+        setCart(localCart);
+        toast.success("Product quantity increased");
       }
     }
   };
 
-
   const decreaseQuantityOfProduct = async (userId, productId) => {
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_SERVER_URL}/cart/decreaseQuantity`,
-        {
-          userId: userId,
-          productId: productId,
-        }
-      );
-      // // // console.log(response.data.cart);
-      getCart(userId);
-      toast.success("Product quantity decreased");
-    } catch (error) {
-      console.error("Error decreasing product quantity:", error);
-      toast.error("Failed to decrease product quantity");
+    if (userLoggedIn) {
+      try {
+        const response = await axios.put(
+          `${import.meta.env.VITE_SERVER_URL}/cart/decreaseQuantity`,
+          {
+            userId: userId,
+            productId: productId,
+          }
+        );
+        getCart(userId);
+        toast.success("Product quantity decreased");
+      } catch (error) {
+        console.error("Error decreasing product quantity:", error);
+        toast.error("Failed to decrease product quantity");
+      }
+    } else {
+      // Handle local storage cart
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const product = localCart.find(item => item.productId._id === productId);
+      if (product && product.quantity > 1) {
+        product.quantity -= 1;
+        localStorage.setItem("cart", JSON.stringify(localCart));
+        setCart(localCart);
+        toast.success("Product quantity decreased");
+      }
     }
   };
 
   const removeProduct = async (userId, productId) => {
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_SERVER_URL}/cart/removeProduct`,
-        {
-          userId: userId,
-          productId: productId,
-        }
-      );
-      // // // console.log(response.data.cart);
-      getCart(userId);
+    if (userLoggedIn) {
+      try {
+        const response = await axios.put(
+          `${import.meta.env.VITE_SERVER_URL}/cart/removeProduct`,
+          {
+            userId: userId,
+            productId: productId,
+          }
+        );
+        getCart(userId);
+        toast.success("Product Removed from Cart");
+      } catch (error) {
+        console.error("Error removing product from cart:", error);
+        toast.error("Failed to remove product from cart");
+      }
+    } else {
+      // Handle local storage cart
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const updatedCart = localCart.filter(item => item.productId._id !== productId);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      setCart(updatedCart);
+      setCartCount(updatedCart.length);
       toast.success("Product Removed from Cart");
-    } catch (error) {
-      console.error("Error removing product from cart:", error);
-      toast.error("Failed to remove product from cart");
     }
   };
 
@@ -357,7 +408,9 @@ const Cart = () => {
                         </td>
 
                         {/* Size */}
-                        <td className="text-center">{item.size}</td>
+                        <td className="text-center">
+                          {item.selectedSize || item.size || "N/A"}
+                        </td>
 
                         {/* Updated Price */}
                         <td className="text-center">

@@ -159,8 +159,27 @@ const Checkout = () => {
     window.scrollTo(0, 0);
     const user = JSON.parse(localStorage.getItem("user"));
     setUserDetails(user);
-    getCart(user?._id);
-  }, []);
+
+    // If it's buy now flow
+    if (param?.toLowerCase() === "buynow") {
+      if (buyNow?.length > 0) {
+        const total1 = buyNow.reduce((acc, item) => {
+          const price = item.productId?.discountValue
+            ? item.productId.discountValue
+            : (item.productId?.price || item.updatedPrice);
+          return acc + (Number(price) * Number(item.quantity || 1));
+        }, 0);
+        setSubTotal(total1);
+        setTotal(total1);
+        setCart(buyNow);
+      } else {
+        navigate(-1);
+      }
+    } else {
+      // Regular cart flow
+      getCart(user?._id);
+    }
+  }, [param, buyNow]);
 
   const getCart = async (userId) => {
     try {
@@ -198,6 +217,9 @@ const Checkout = () => {
       console.error("Error Fetching Cart", error);
     }
   };
+
+  // Add this check for user login status
+  const isUserLoggedIn = localStorage.getItem("user") ? true : false;
 
   return (
     <div className=" w-full">
@@ -278,7 +300,7 @@ const Checkout = () => {
                     className=" w-full  dark:bg-transparent p-2 text-[#7A7A7A] text-[14.4px]"
                     placeholder="Email"
                   />
-                  {hideVerifyButton == false && (
+                  {!isUserLoggedIn && hideVerifyButton == false && (
                     <button
                       onClick={() => {
                         sendOtp();
@@ -289,7 +311,7 @@ const Checkout = () => {
                     </button>
                   )}
                 </div>
-                {isVerify && (
+                {!isUserLoggedIn && isVerify && (
                   <div className=" flex w-full items-center justify-between mt-2 border-[1.4px] border-[#999999] ">
                     <input
                       name="number"
@@ -453,39 +475,6 @@ const Checkout = () => {
                 />
               </div>
             </div>
-
-            <div className=" sm:grid grid-cols-2 gap-10 xl:gap-[13%] mt-6 ">
-              <div className=" flex items-center gap-2 ">
-                <input
-                  name="State*"
-                  id="State*"
-                  type="checkbox"
-                  className=" border-[1.4px] border-[#999999] dark:bg-transparent p-2 text-[#7A7A7A] text-[14.4px]"
-                  placeholder="State*"
-                />
-                <label
-                  className=" text-[#7A7A7A] font-[700] plus-jakarta text-[12px] md:text-[13px] 2xl:text-[14.4px] mb-1 "
-                  htmlFor="State*"
-                >
-                  Create an Acount?
-                </label>
-              </div>
-              <div className=" flex items-center gap-2 ">
-                <input
-                  name="State*"
-                  id="State*"
-                  type="checkbox"
-                  className=" border-[1.4px] border-[#999999] dark:bg-transparent p-2 text-[#7A7A7A] text-[14.4px]"
-                  placeholder="State*"
-                />
-                <label
-                  className=" text-[#7A7A7A] font-[700] plus-jakarta text-[12px] md:text-[13px] 2xl:text-[14.4px] mb-1 "
-                  htmlFor="State*"
-                >
-                  Ship to Different Address{" "}
-                </label>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -502,19 +491,23 @@ const Checkout = () => {
               {param?.toLowerCase() === "buynow" ? (
                 <>
                   {buyNow?.map((item, index) => {
+                    const price = item.productId?.discountValue
+                      ? item.productId.discountValue
+                      : (item.productId?.price || item.updatedPrice);
+
                     return (
                       <div
                         key={index}
-                        className=" flex items-center justify-between font-[600] plus-jakarta tetx-[#363F4D] text-[13.4px] 2xl:text-[14.4px] "
+                        className="flex items-center justify-between font-[600] plus-jakarta tetx-[#363F4D] text-[13.4px] 2xl:text-[14.4px]"
                       >
-                        <p className=" text-[#7A7A7A] font-[600] plus-jakarta">
-                          {item?.productId.title?.slice(0, 50)}
+                        <p className="text-[#7A7A7A] font-[600] plus-jakarta">
+                          {item?.productId?.title?.slice(0, 50)}
                         </p>
-                        <p className=" text-[#363F4D] dark:text-gray-400 text-[600]">
-                          {item.quantity} x {currency}
+                        <p className="text-[#363F4D] dark:text-gray-400 text-[600]">
+                          {item.quantity || 1} x {currency}
                           {currency === "OMR"
-                            ? (item.updatedPrice * 1 * 0.1).toFixed(2)
-                            : item.updatedPrice * 1}
+                            ? (price * 0.1).toFixed(2)
+                            : price}
                         </p>
                       </div>
                     );

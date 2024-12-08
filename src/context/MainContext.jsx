@@ -51,7 +51,7 @@ export const MainAppProvider = ({ children }) => {
     } else {
       getUnloggedCart();
     }
-  }, []);
+  }, [userLoggedIn]);
 
   const getAllProducts = async () => {
     setLoading(true);
@@ -102,9 +102,7 @@ export const MainAppProvider = ({ children }) => {
     setLoading(true);
     var tempCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartCount(tempCart?.length);
-    // console.log(tempCart?.length);
     setCart(tempCart);
-    // console.log(tempCart);
     const total1 = tempCart?.reduce(
       (acc, obj) => acc + obj.productId.price * obj.quantity,
       0
@@ -112,6 +110,7 @@ export const MainAppProvider = ({ children }) => {
     setTotal(total1);
     setLoading(false);
   };
+
   const addToCart = async (productId, quantity) => {
     if (userLoggedIn) {
       try {
@@ -123,16 +122,47 @@ export const MainAppProvider = ({ children }) => {
             quantity: quantity,
           }
         );
-        // console.log(response.data.cart);
-        getCart(userId);
+        getCart(user?._id);
         toast.success("Product Added to Cart");
-        // Handle success response, if needed
       } catch (error) {
         console.error("Error adding product to cart:", error);
         toast.error("Failed to add product to cart");
-        // Handle error
       }
-    } else toast.error("You are not logged in");
+    } else {
+      // Handle local storage cart for non-logged in users
+      var tempCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Check if product already exists in cart
+      if (tempCart?.find(i => i?.productId?._id === productId && i?.quantity === quantity)) {
+        toast.warn("Product already in Cart");
+        return;
+      }
+
+      // If product exists but quantity is different
+      if (tempCart?.find(i => i?.productId?._id === productId && i?.quantity !== quantity)) {
+        var newTempCart = tempCart?.filter(i => i?.productId?._id !== productId);
+        var tempPro = {
+          productId: Products.find(p => p._id === productId),
+          quantity: quantity,
+          updatedPrice: price
+        };
+        newTempCart.push(tempPro);
+        setCartCount(newTempCart?.length);
+        localStorage.setItem("cart", JSON.stringify(newTempCart));
+        toast.success("Product quantity updated in Cart");
+      } else {
+        // Add new product to cart
+        tempCart?.push({
+          productId: Products.find(p => p._id === productId),
+          quantity: quantity,
+          updatedPrice: price
+        });
+        setCartCount(tempCart?.length);
+        localStorage.setItem("cart", JSON.stringify(tempCart));
+        toast.success("Product added to Cart");
+      }
+      getUnloggedCart();
+    }
   };
 
   const getWishlist = async (userId) => {

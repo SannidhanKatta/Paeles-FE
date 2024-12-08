@@ -254,40 +254,64 @@ const ProductPage = ({ }) => {
     }
   };
   const handleAddToCart = () => {
-    if (!userLoggedIn) {
-      toast.error("You are not logged in");
+    if (!selectedSize) {
+      toast.error("Please Select a Size Before adding to Cart");
       return;
     }
-    if (!selectedSize) {
-      toast.error("Please Select a Size Before adding to Cart")
+
+    if (userLoggedIn) {
+      // Existing logic for logged-in users
+      addToCart(userDetails?._id, product?._id, productQty, selectedSize.size);
+    } else {
+      // New logic for non-logged-in users
+      const tempCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Check if product with same size already exists
+      const existingProduct = tempCart.find(item =>
+        item.productId._id === product._id &&
+        item.size === selectedSize.size
+      );
+
+      if (existingProduct) {
+        toast.error("Product already in cart with this size");
+        return;
+      }
+
+      // Add new product to cart
+      const cartItem = {
+        productId: product,
+        quantity: productQty,
+        size: selectedSize.size,
+        updatedPrice: minprice == 0 ? price : minprice
+      };
+
+      tempCart.push(cartItem);
+      localStorage.setItem("cart", JSON.stringify(tempCart));
+      setCartCount(tempCart.length);
+      toast.success("Product Added to Cart");
     }
-    console.log(selectedSize)
-    // Proceed to add to cart if both conditions are met
-    addToCart(userDetails?._id, product?._id, productQty, selectedSize.size);
   };
 
-  const addToCart = async (userId, productPageId, quantity, selectedSize) => {
-    console.log(userId, productPageId, quantity, selectedSize);
+  const addToCart = async (userId, productId, quantity, selectedSize) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/cart/addProduct`,
         {
           userId: userId,
-          productId: productPageId,
+          productId: productId,
           quantity: quantity,
-          updatedPrice: minprice == 0 ? price : minprice,
           selectedSize: selectedSize,
+          updatedPrice: minprice == 0 ? price : minprice,
         }
       );
       setCartCount((prev) => prev + 1);
       toast.success("Product Added to Cart");
-      // Handle success response, if needed
     } catch (error) {
       console.error("Error adding product to cart:", error);
       if (error.response && error.response.data.message === "Product already in cart with this size") {
         toast.error("Product already in cart with this size");
       } else if (error.response && error.response.data.message === "Size is Required") {
-        toast.error("Please select a size")
+        toast.error("Please select a size");
       } else {
         toast.error("Failed to add product to cart");
       }
@@ -411,37 +435,37 @@ const ProductPage = ({ }) => {
                       className="h-full w-full object-cover cursor-pointer border border-black"
                     />
                   </div>
-                    <div className="raleway grid grid-cols-4 gap-1">
-                      {/* Main image */}
-                      <img
-                        onClick={() => {
-                          SetActiveImage(product?.mainImage);
-                        }}
-                        src={product?.mainImage}
-                        alt={"mainImage"}
-                        className={`${activeImage === product?.mainImage
+                  <div className="raleway grid grid-cols-4 gap-1">
+                    {/* Main image */}
+                    <img
+                      onClick={() => {
+                        SetActiveImage(product?.mainImage);
+                      }}
+                      src={product?.mainImage}
+                      alt={"mainImage"}
+                      className={`${activeImage === product?.mainImage
+                        ? "opacity-40 border-[2px] border-orange-400"
+                        : "cursor-pointer"
+                        } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
+                    />
+
+                    {/* Additional images */}
+                    {product?.additionalImages &&
+                      product?.additionalImages.slice(0, 3).map((image, index) => (
+                        <img
+                          key={index}
+                          onClick={() => {
+                            SetActiveImage(image);
+                          }}
+                          src={image}
+                          alt={"product-pics"}
+                          className={`${activeImage === image
                             ? "opacity-40 border-[2px] border-orange-400"
                             : "cursor-pointer"
-                          } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
-                      />
-
-                      {/* Additional images */}
-                      {product?.additionalImages &&
-                        product?.additionalImages.slice(0, 3).map((image, index) => (
-                          <img
-                            key={index}
-                            onClick={() => {
-                              SetActiveImage(image);
-                            }}
-                            src={image}
-                            alt={"product-pics"}
-                            className={`${activeImage === image
-                                ? "opacity-40 border-[2px] border-orange-400"
-                                : "cursor-pointer"
-                              } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
-                          />
-                        ))}
-                    </div>
+                            } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
+                        />
+                      ))}
+                  </div>
 
                   <div className="w-full">
                     <div className=" grid grid-cols-1 lg:grid-cols-2 lg:gap-5">
@@ -635,7 +659,12 @@ const ProductPage = ({ }) => {
                   </div>
                   <button
                     onClick={() => {
-                      setBuyNow([{ productId: product, quantity: 1, _id: product?._id }]);
+                      setBuyNow([{
+                        productId: product,
+                        quantity: 1,
+                        _id: product?._id,
+                        updatedPrice: product.discountValue || product.price
+                      }]);
                       navigate("/checkout?param=buynow");
                     }}
                     className="raleway text-center border-[2px] border-gray-500 font-semibold text-sm py-2.5 mt-2 w-full"
