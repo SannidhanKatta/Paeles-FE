@@ -63,18 +63,17 @@ const Checkout = () => {
 
   // // console.log(cart);
 
-  const handleStripeCheckout = async () => {
+  const handlePhonePeCheckout = async () => {
     setLoading(true);
-    const public_key = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
-    const stripe = await loadStripe(public_key);
+
     const userDetailsUpdated = {
       ...userDetails,
       customerId: customerId,
       phone: phoneCode1 + phone,
     };
-    const response = await fetch(
-      `${import.meta.env.VITE_SERVER_URL}/order/stripe-checkout`,
-      {
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/order/phonepe-payment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,20 +83,22 @@ const Checkout = () => {
           customer: userDetailsUpdated,
           totalAmount: total,
         }),
-      }
-    );
-    const session = await response.json();
-    console.log(session);
+      });
 
-    // Redirect to Stripe Checkout page
-    setLoading(false);
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-    console.log(result);
-    if (result.error) {
-      console.error("Error redirecting to Stripe Checkout:", result.error);
-      // Handle error
+      const result = await response.json();
+      console.log(result);
+
+      if (result.success && result.paymentUrl) {
+        // Redirect to PhonePe Payment Page
+        window.location.href = result.paymentUrl;
+      } else {
+        console.error("Error initiating PhonePe payment:", result.message);
+        // Handle error
+      }
+    } catch (error) {
+      console.error("Error in PhonePe Checkout:", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -577,8 +578,6 @@ const Checkout = () => {
           </div>
 
           <div className="  mt-4">
-            <div className=" flex flex-col p-5 bg-[#F2F2F2] dark:bg-white/5">
-            </div>
             {loading ? (
               <div className=" w-full flex items-center justify-center py-3">
                 <img
@@ -590,7 +589,7 @@ const Checkout = () => {
             ) : (
               <button
                 className=" bg-[#363F4D] disabled:bg-gray-400 disabled:border-gray-400  border-[1.4px] border-[#363F4D] px-4 py-2.5 font-medium uppercase text-[13px] text-white mt-6 "
-                onClick={handleStripeCheckout}
+                onClick={handlePhonePeCheckout}
                 disabled={loading}
               >
                 Place order
