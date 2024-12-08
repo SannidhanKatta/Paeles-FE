@@ -8,36 +8,6 @@ import { useAuth } from "@/context/AuthContext";
 import { MainAppContext } from "@/context/MainContext";
 import { lightGreen } from "@mui/material/colors";
 
-// const CartData = [
-//   {
-//     id: 1,
-//     image: "/Images/pan.png",
-//     name: "Cillum dolore tortor nisl fermentum",
-//     price: "29.00",
-//     quantity: 1,
-//   },
-//   {
-//     id: 1,
-//     image: "/Images/pan.png",
-//     name: "Cillum dolore tortor nisl fermentum",
-//     price: "29.00",
-//     quantity: 1,
-//   },
-//   {
-//     id: 1,
-//     image: "/Images/pan.png",
-//     name: "Cillum dolore tortor nisl fermentum",
-//     price: "29.00",
-//     quantity: 1,
-//   },
-//   {
-//     id: 1,
-//     image: "/Images/pan.png",
-//     name: "Cillum dolore tortor nisl fermentum",
-//     price: "29.00",
-//     quantity: 1,
-//   },
-// ];
 
 const Cart = () => {
   const { currency, isCartOpen, SetIsCartOpen, cartTotal, setCartTotal } =
@@ -108,6 +78,7 @@ const Cart = () => {
             (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
             0
           );
+
           setTotal(total1);
           if (response.data.cart.couponDiscountedTotal != 0) {
             setDiscountAmt(total1 - response.data.cart.couponDiscountedTotal);

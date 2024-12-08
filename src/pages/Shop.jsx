@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MdStar } from "react-icons/md";
 import MultiRangeSlider from "multi-range-slider-react";
-import { AiOutlineBars } from "react-icons/ai";
-import { HiMiniSquares2X2 } from "react-icons/hi2";
 import { AppContext } from "../context/AppContext";
 import { IoHeartCircle, IoStarOutline } from "react-icons/io5";
 import { array, number } from "prop-types";
@@ -74,7 +72,6 @@ const Shop = () => {
     setProductPageId,
   } = useContext(MainAppContext);
   const [page, setPage] = useState(0);
-  const [isCard, setIsCard] = useState(true);
   const [loading, setLoading] = useState(true);
   const [sortMethod, setSortMethod] = useState(1);
   const [banners, setBanners] = useState([]);
@@ -84,6 +81,7 @@ const Shop = () => {
 
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const { category, subcategory } = useParams();
+  const [openCategory, setOpenCategory] = useState(null);
 
   const { SetIsMobileFilterOpen, currency, wishlist } = useContext(AppContext);
   const handleInput = (e) => {
@@ -140,6 +138,17 @@ const Shop = () => {
     setFilterCategories(category ? category.toLowerCase() : "all");
     setFilterSubCategories(subcategory ? subcategory.toLowerCase() : "all");
   }, [category, subcategory]);
+
+  useEffect(() => {
+    if (category) {
+      const normalizedCategory = category.toLowerCase();
+      setOpenCategory(normalizedCategory);
+      setSelectedCategory(normalizedCategory);
+    } else {
+      setOpenCategory(null);
+      setSelectedCategory(null);
+    }
+  }, [category]);
 
   const sortProducts = (method) => {
     switch (method) {
@@ -202,18 +211,21 @@ const Shop = () => {
         <div data-aos="fade-up" data-aos-duration="1000">
           <div className=" ">
             <div className=" px-[4%] md:px-[8%] py-3.5 md:py-7 bg-[#F4F5F7] dark:bg-black dark:text-gray-400 dark:border-b dark:border-t dark:border-gray-600  flex items-center justify-between ">
-              <h2 className=" uppercase text-[17px] md:text-[24px] font-[700] plus-jakarta text-[#212121] dark:text-gray-400 ">
-                Shop
-              </h2>
-              <div className=" flex items-center font-[500] plus-jakarta text-[12px] md:text-[13.6px] ">
-                <Link to="/">
-                  <span className=" uppercase text-[#FF7004] cursor-pointer ">
-                    Home
-                  </span>
-                </Link>
-                <span className=" px-1 ">/</span>
-                <span className=" uppercase">Shop</span>
-              </div>
+              <h4 className=" uppercase text-[15px]  md:text-[18px] font-[500] plus-jakarta text-[#212121] dark:text-gray-400 ">
+                {filterCategories !== "all"
+                  ? `${filterCategories}${filterSubCategories !== "all" ? ` / ${filterSubCategories}` : ''}`
+                  : "Shop"}
+                {/* {filterCategories !== "all" ? filterCategories : "Shop"} */}
+              </h4>
+              {/* <div className="flex items-center font-[500] plus-jakarta text-[12px] md:text-[13.6px]">
+                {filterSubCategories !== "all" ? (
+                  <span className="uppercase">{filterSubCategories}</span>
+                ) : (
+                  filterCategories !== "all" && (
+                    <span className="uppercase">{filterCategories}</span>
+                  )
+                )}
+              </div> */}
             </div>
             {loading ? (
               <div className=" w-full flex items-center justify-center py-3">
@@ -230,131 +242,96 @@ const Shop = () => {
                     CATEGORIES
                   </p>
 
-                  {categories?.map((i, index) => {
-                    return (
-                      <div key={index}>
-                        {i?.subcategories ? (
-                          <Menu>
-                            <Menu.Button
-                              className={`w-full justify-between capitalize cursor-pointer flex items-center border-b-[1px] py-2.5 border-[#E5E5E5] ${i?.fileName?.toLowerCase() === filterCategories
-                                ? "text-[#F9BA48] font-bold plus-jakarta"
-                                : "text-[#363F4D] dark:text-gray-400"
-                                } font-[400] text-[13px] md:text-[14px] 2xl:text-[16px] `}
-                            >
-                              {i.fileName}
-                              <ChevronDownIcon className=" w-[15px]" />
-                            </Menu.Button>
-                            <Menu.Items className="   flex flex-col  text-[13px] md:text-[13px] 2xl:text-[16px]  dark:text-gray-600 bg-white pl-2 gap-2 w-full ">
-                              {i?.subcategories?.map((e, index) => {
-                                return (
-                                  <Link
-                                    autoFocus="off"
-                                    to={`/shop/${i?.fileName}/${e?.name}`}
-                                    onClick={() => {
-                                      SetIsMenuOpen(false);
-                                    }}
-                                    key={index}
-                                  >
-                                    <p
-                                      className={`w-full capitalize cursor-pointer flex items-center border-b-[1px] py-2.5 border-[#E5E5E5] ${i?.fileName?.toLowerCase() ===
-                                        filterCategories
-                                        ? "text-[#F9BA48] font-bold plus-jakarta"
-                                        : "text-[#363F4D] dark:text-gray-400"
-                                        } font-[400] text-[12px] md:text-[13px] 2xl:text-[15px] `}
-                                      key={index}
-                                    >
-                                      {e?.name}
-                                    </p>
-                                  </Link>
-                                );
-                              })}
-                            </Menu.Items>
-                          </Menu>
-                        ) : (
-                          <Link
-                            to={`/shop/${i?.fileName}/all`}
-                            onClick={() => {
-                              setFilterCategories(i?.fileName?.toLowerCase());
-                            }}
-                            className={`w-full capitalize cursor-pointer flex items-center border-b-[1px] py-2.5 border-[#E5E5E5] ${i?.fileName?.toLowerCase() === filterCategories
-                              ? "text-[#F9BA48] font-bold plus-jakarta"
-                              : "text-[#363F4D] dark:text-gray-400"
-                              } font-[400] text-[13px] md:text-[14px] 2xl:text-[16px] `}
-                          >
-                            {i?.fileName}
-                          </Link>
+                  {categories?.map((cat, index) => (
+                    <div key={index}>
+                      <div
+                        onClick={() => {
+                          if (openCategory !== cat.fileName.toLowerCase()) {
+                            setOpenCategory(cat.fileName.toLowerCase());
+                          }
+                        }}
+                        className={`flex justify-between items-center py-2 cursor-pointer ${cat.fileName.toLowerCase() === filterCategories.toLowerCase()
+                          ? 'text-[#F9BA48] font-semibold'
+                          : 'text-gray-800'
+                          }`}
+                      >
+                        <span>{cat.fileName}</span>
+                        {cat.subcategories && cat.subcategories.length > 0 && (
+                          <ChevronDownIcon
+                            className={`w-4 h-4 transition-transform ${openCategory === cat.fileName.toLowerCase() ? 'rotate-180' : ''
+                              }`}
+                          />
                         )}
                       </div>
-                    );
-                  })}
+                      {openCategory === cat.fileName.toLowerCase() && cat.subcategories && cat.subcategories.length > 0 && (
+                        <div className="pl-4">
+                          {cat.subcategories.map((sub, subIndex) => (
+                            <Link
+                              key={subIndex}
+                              to={`/shop/${cat.fileName}/${sub.name}`}
+                              className={`block py-1 text-gray-600 hover:text-blue-400 ${filterSubCategories === sub.name.toLowerCase()
+                                ? 'font-bold text-blue-500'
+                                : ''
+                                }`}
+                            >
+                              {sub.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
 
                   {/* <div className=" bg-[#E5E5E5] p-3 ">
-                    <p className="  border-b-[1px] pt-2.5 border-[#E5E5E5] text-[#363F4D] font-[700] plus-jakarta text-[13px] md:text-[14.5px] 2xl:text-[16px] ">
-                      FILTER BY PRICE
-                    </p>
-                    <MultiRangeSlider
-                      min={0}
-                      max={maxPrice}
-                      step={5}
-                      label="false"
-                      ruler="false"
-                      style={{ border: "none", outline: "none", boxShadow: "none" }}
-                      barInnerColor="#F9BA48"
-                      barRightColor="#000"
-                      barLeftColor="#000"
-                      thumbLeftColor="#F9BA48"
-                      thumbRightColor="#F9BA48"
-                      minValue={minValue}
-                      maxValue={maxValue}
-                      onInput={(e) => {
-                        handleInput(e);
-                      }}
-                    />
-                    <p className="  border-b-[1px] border-[#E5E5E5] text-[#363F4D] font-[700] plus-jakarta text-[12.5px] md:text-[14px] 2xl:text-[15px] ">
-                      Price: {currency}{" "}
-                      {currency === "OMR" ? minValue * 0.1 : minValue} - {currency}{" "}
-                      {currency === "OMR" ? maxValue * 0.1 : maxValue}
-                    </p>
-                  </div> */}
+                      <p className="  border-b-[1px] pt-2.5 border-[#E5E5E5] text-[#363F4D] font-[700] plus-jakarta text-[13px] md:text-[14.5px] 2xl:text-[16px] ">
+                        FILTER BY PRICE
+                      </p>
+                      <MultiRangeSlider
+                        min={0}
+                        max={maxPrice}
+                        step={5}
+                        label="false"
+                        ruler="false"
+                        style={{ border: "none", outline: "none", boxShadow: "none" }}
+                        barInnerColor="#F9BA48"
+                        barRightColor="#000"
+                        barLeftColor="#000"
+                        thumbLeftColor="#F9BA48"
+                        thumbRightColor="#F9BA48"
+                        minValue={minValue}
+                        maxValue={maxValue}
+                        onInput={(e) => {
+                          handleInput(e);
+                        }}
+                      />
+                      <p className="  border-b-[1px] border-[#E5E5E5] text-[#363F4D] font-[700] plus-jakarta text-[12.5px] md:text-[14px] 2xl:text-[15px] ">
+                        Price: {currency}{" "}
+                        {currency === "OMR" ? minValue * 0.1 : minValue} - {currency}{" "}
+                        {currency === "OMR" ? maxValue * 0.1 : maxValue}
+                      </p>
+                    </div> */}
 
                   {/* <button
-                    onClick={() => {
-                      setFilterColor("");
-                      setFilterCategories("");
-                      set_minValue(0);
-                      set_maxValue(maxPrice);
-                    }}
-                    className=" my-2 bg-gray-600 text-white text-sm px-4 py-2 "
-                  >
-                    {" "}
-                    Clear Filters
-                  </button> */}
+                      onClick={() => {
+                        setFilterColor("");
+                        setFilterCategories("");
+                        set_minValue(0);
+                        set_maxValue(maxPrice);
+                      }}
+                      className=" my-2 bg-gray-600 text-white text-sm px-4 py-2 "
+                    >
+                      {" "}
+                      Clear Filters
+                    </button> */}
                 </div>
                 <div className="w-full lg:w-[77%] h-full">
-
-                  <div className=" w-full flex lg:grid grid-cols-3 gap-2 items-center justify-between ">
-                    <div className=" w-full hidden lg:flex gap-2 items-center">
-                      <HiMiniSquares2X2
-                        onClick={() => {
-                          setIsCard(true);
-                        }}
-                        className={` text-[19px] cursor-pointer ${isCard && "text-[#F9BA48]"
-                          } `}
-                      />
-                      <AiOutlineBars
-                        onClick={() => {
-                          setIsCard(false);
-                        }}
-                        className={` text-[19px] cursor-pointer pointer ${!isCard && "text-[#F9BA48]"
-                          } `}
-                      />
-                    </div>
-                    <div className=" flex items-center pr-3 py-2.5 text-[#7A7A7A] font-[400] text-[12px] md:text-[13.5px] 2xl:text-[14px] ">
+                  <div className="w-full flex lg:grid grid-cols-3 gap-2 items-center justify-between">
+                    <div className="flex items-center pr-3 py-2.5 text-[#7A7A7A] font-[400] text-[12px] md:text-[13.5px] 2xl:text-[14px]">
                       <label htmlFor="sort-method">Sort By: </label>
                       <select
                         name="sort-method"
                         id="sort-method"
-                        className="text-[14px] p-1 dark:bg-transparent dark:border dark:border-gray-700   "
+                        className="text-[14px] p-1 dark:bg-transparent dark:border dark:border-gray-700"
                         value={sortMethod}
                         onChange={(e) => {
                           setSortMethod(e.target.value);
@@ -363,7 +340,7 @@ const Shop = () => {
                         {sortMethods.map((e, index) => {
                           return (
                             <option
-                              className=" p-2 dark:bg-black "
+                              className="p-2 dark:bg-black"
                               key={index}
                               value={e.id}
                             >
@@ -377,7 +354,7 @@ const Shop = () => {
                       onClick={() => {
                         setIsMobileFilterOpen(true);
                       }}
-                      className=" lg:hidden underline text-sm cursor-pointer "
+                      className="lg:hidden underline text-sm cursor-pointer"
                     >
                       Filters
                     </p>
@@ -492,21 +469,21 @@ const Shop = () => {
                                 </div>
                               </Link>
                               {/* <Link
-                                to={`/product/${item?.title.replace(/\s+/g, "-")}`}
-                                onClick={() => {
-                                  sessionStorage.setItem(
-                                    "productPageId",
-                                    JSON.stringify(item?._id)
-                                  );
-                                  setProductPageId(item?._id);
-                                }}
-                              >
-                                <button
-                                  className="text-sm dark:text-black font-semibold bg-[#efefef] py-2 w-full"
+                                  to={`/product/${item?.title.replace(/\s+/g, "-")}`}
+                                  onClick={() => {
+                                    sessionStorage.setItem(
+                                      "productPageId",
+                                      JSON.stringify(item?._id)
+                                    );
+                                    setProductPageId(item?._id);
+                                  }}
                                 >
-                                  View Product
-                                </button>
-                              </Link> */}
+                                  <button
+                                    className="text-sm dark:text-black font-semibold bg-[#efefef] py-2 w-full"
+                                  >
+                                    View Product
+                                  </button>
+                                </Link> */}
                             </div>
                           ))}
                       </div>
@@ -552,11 +529,15 @@ const Shop = () => {
                       onClick={() => {
                         setSelectedCategory(selectedCategory === category.fileName ? null : category.fileName);
                       }}
-                      className={`flex justify-between items-center py-2 cursor-pointer ${selectedCategory === category.fileName ? 'text-[#F9BA48]' : 'text-gray-800'}`}
+                      className={`flex justify-between items-center py-2 cursor-pointer ${category.fileName.toLowerCase() === filterCategories.toLowerCase()
+                        ? 'text-[#F9BA48]'
+                        : 'text-gray-800'
+                        }`}
                     >
                       <span>{category.fileName}</span>
                       {category.subcategories && category.subcategories.length > 0 && (
-                        <ChevronDownIcon className={`w-4 h-4 transition-transform ${selectedCategory === category.fileName ? 'rotate-180' : ''}`} />
+                        <ChevronDownIcon className={`w-4 h-4 transition-transform ${selectedCategory === category.fileName ? 'rotate-180' : ''
+                          }`} />
                       )}
                     </div>
                     {selectedCategory === category.fileName && category.subcategories && category.subcategories.length > 0 && (
@@ -569,7 +550,10 @@ const Shop = () => {
                               setFilterSubCategories(sub.name.toLowerCase());
                               setIsMobileFilterOpen(false);
                             }}
-                            className="block py-1 text-gray-600 hover:text-blue-400"
+                            className={`block py-1 text-gray-600 hover:text-blue-400 ${filterSubCategories === sub.name.toLowerCase()
+                              ? 'font-bold text-blue-500'
+                              : ''
+                              }`}
                           >
                             {sub.name}
                           </Link>

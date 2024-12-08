@@ -226,8 +226,8 @@ const Header = () => {
           />
         </Link>
 
-        {/* Search bar - hidden on mobile, visible on larger screens */}
-        <div className="hidden md:flex flex-grow mx-4 max-w-xl">
+        {/* Comment out desktop search bar */}
+        {/* <div className="hidden md:flex flex-grow mx-4 max-w-xl">
           <div className="relative w-full">
             <input
               type="text"
@@ -242,7 +242,8 @@ const Header = () => {
               />
             </button>
           </div>
-        </div>
+        </div> */}
+
         {/* Right side icons */}
         <div className="flex items-center space-x-4">
           {/* <Link to="tel:600 505253" className="hidden md:flex items-center">
@@ -285,11 +286,12 @@ const Header = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white dark:bg-gray-800 py-2 px-4">
           <div className="flex flex-col space-y-2">
-            <input
+            {/* Comment out mobile search bar */}
+            {/* <input
               type="text"
               placeholder="Search your products here"
               className="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            /> */}
             <Link to="/" className="py-2">Home</Link>
             <Link to="/shop/all/all" className="py-2">Shop</Link>
             <Link to="/about" className="py-2">About</Link>

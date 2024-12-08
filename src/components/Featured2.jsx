@@ -13,7 +13,7 @@ export default function Featured2({
   const [screenSize, setScreenSize] = useState("");
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
-  const [limit, setLimit] = useState(12); // Initially display 10 products
+  const [limit, setLimit] = useState(10); // Initially display 10 products
 
   const {
     handleAddToWishlist,
@@ -74,7 +74,7 @@ export default function Featured2({
   }, [products, filteredCategory, limit]);
 
   const handleViewMore = () => {
-    setLimit(limit + 12); // Increment limit by 10
+    setLimit(limit + 10); // Increment limit by 10
   };
 
   return (
