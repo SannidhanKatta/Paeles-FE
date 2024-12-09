@@ -130,9 +130,14 @@ const ordersTrack = ({ order, status, deliveryDate, createdAt }) => {
                   Expected Delivery Date:
                 </span>{" "}
                 {deliveryDate ? (
-                  deliveryDate
+                  new Date(deliveryDate).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
                 ) : (
-                  <span className=" text-sm">Will be Updated Soon</span>
+                  <span className="text-sm">Will be Updated Soon</span>
                 )}
               </p>
             </div>
@@ -146,14 +151,14 @@ const ordersTrack = ({ order, status, deliveryDate, createdAt }) => {
                   status === "orderReceived"
                     ? 0
                     : status === "inprogress"
-                    ? 25
-                    : status === "pending"
-                    ? 50
-                    : status === "outForDelivery"
-                    ? 75
-                    : status === "orderDelivered"
-                    ? 100
-                    : 0
+                      ? 25
+                      : status === "pending"
+                        ? 50
+                        : status === "outForDelivery"
+                          ? 75
+                          : status === "orderDelivered"
+                            ? 100
+                            : 0
                 }
                 getAriaValueText={valuetext}
                 step={25}

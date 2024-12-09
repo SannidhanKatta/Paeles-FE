@@ -188,47 +188,6 @@ const Orders = () => {
 
       <div className=" flex flex-col mt-3 md:mt-7 overflow-x-auto rounded-md dark:bg-white/5 bg-white p-3 md:p-5 ">
         <div className="overflow-x-auto">
-          {/* <div className=" flex flex-col md:flex-row md:items-center justify-between">
-            <p className=" text-sm font-semibold">
-              We found {sortedArrayCount} items for you! 
-            </p>
-            <div className=" flex flex-col md:flex-row md:items-center gap-3 py-2">
-              <select
-                value={sortMethod}
-                onChange={(e) => {
-                  setSortMethod(e.target.value);
-                }}
-                className=" md:w-[250px] p-2 dark:bg-transparent dark:text-gray-400 text-[#4F5D77] font-semibold bg-[#f2f2f2] text-[12.5px] md:text-[14.4px]"
-              >
-                {sortMethods.map((method, index) => {
-                  return (
-                    <option
-                      key={index}
-                      value={method.value}
-                      className=" text-black"
-                    >
-                      {method.name}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                value={filterMethod}
-                onChange={(e) => {
-                  setFilterMethod(e.target.value);
-                }}
-                className=" w-full p-2 dark:bg-transparent dark:text-gray-400 text-[#4F5D77] bg-[#f2f2f2] font-semibold text-[12.5px] md:text-[14.4px]"
-              >
-                {filterMethods.map((method, index) => {
-                  return (
-                    <option key={index} value={method.value}>
-                      {method.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div> */}
           {dialog && (
             <VendorDetailsDialog
               close={closeDialog}
@@ -276,6 +235,7 @@ const Orders = () => {
                       <td>
                         <select
                           className={`text-center rounded-md py-1 w-full outline-none text-sm font-semibold ${item.status === "orderReceived"
+
                             ? "bg-orange-200 text-orange-700"
                             : item.status === "inProgress"
                               ? "bg-green-200 text-green-700"
@@ -286,6 +246,7 @@ const Orders = () => {
                                   : item.status === "orderDelivered"
                                     ? "bg-purple-200 text-purple-700"
                                     : "bg-purple-200 text-purple-700"
+
                             }
                           rounded-md py-1 w-full outline-none text-sm font-semibold`}
                           value={item?.status}
@@ -361,69 +322,73 @@ const Orders = () => {
                         >
                           View
                         </button>
-                      </td>
-                    </tr>
+<<<<<<< HEAD
+                      </td >
+                    </tr >
+=======
+                      </td>                    </tr>
+>>>>>>> c7ee7c5bcaa86d3906e3ca943d32de330e817cf3
                   );
                 })}
-            </tbody>
-          </table>
-          <div className="flex items-center justify-end gap-8">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
-              className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-                  ></path>
-                </svg>
-              </span>
-            </button>
-            <p className="block font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
-              Page <strong className="text-gray-900">{currentPage}</strong> of{" "}
-              <strong className="text-gray-900">{totalPages || 1}</strong>
-            </p>
-            <button
-              disabled={currentPage === totalPages || totalPages === 0}
-              onClick={() => handlePageChange(currentPage + 1)}
-              className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                  className="w-4 h-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                  ></path>
-                </svg>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </tbody >
+          </table >
+  <div className="flex items-center justify-end gap-8">
+    <button
+      disabled={currentPage === 1}
+      onClick={() => handlePageChange(currentPage - 1)}
+      className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+      type="button"
+    >
+      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+          stroke="currentColor"
+          aria-hidden="true"
+          className="w-4 h-4"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+          ></path>
+        </svg>
+      </span>
+    </button>
+    <p className="block font-sans text-base antialiased font-normal leading-relaxed text-gray-700">
+      Page <strong className="text-gray-900">{currentPage}</strong> of{" "}
+      <strong className="text-gray-900">{totalPages || 1}</strong>
+    </p>
+    <button
+      disabled={currentPage === totalPages || totalPages === 0}
+      onClick={() => handlePageChange(currentPage + 1)}
+      className="relative h-8 max-h-[32px] w-8 max-w-[32px] select-none rounded-lg border border-gray-900 text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+      type="button"
+    >
+      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+          stroke="currentColor"
+          aria-hidden="true"
+          className="w-4 h-4"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+          ></path>
+        </svg>
+      </span>
+    </button>
+  </div>
+        </div >
+      </div >
+    </div >
   );
 };
 
