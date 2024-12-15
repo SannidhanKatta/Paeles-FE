@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Menu } from "@headlessui/react";
 import { Link } from "react-router-dom";
@@ -111,6 +111,7 @@ const Header = () => {
   const [menu, setMenu] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [categories, setCategories] = useState([]);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -206,6 +207,24 @@ const Header = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false);
+      }
+    }
+
+    // Add event listener when menu is open
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <div className="w-full">
       <div className="px-[3%] md:px-[8%] py-4 flex items-center justify-between bg-white dark:bg-white dark:text-black bottom-shadow">
@@ -284,7 +303,10 @@ const Header = () => {
 
       {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white dark:bg-gray-800 py-2 px-4">
+        <div
+          ref={mobileMenuRef}
+          className="lg:hidden bg-white dark:bg-gray-800 py-2 px-4 absolute w-full z-50"
+        >
           <div className="flex flex-col space-y-2">
             {/* Comment out mobile search bar */}
             {/* <input
@@ -294,17 +316,16 @@ const Header = () => {
             /> */}
             <Link to="/" className="py-2">Home</Link>
             <Link to="/shop/all/all" className="py-2">Shop</Link>
-            <Link to="/about" className="py-2">About</Link>
-            <Link to="/contact" className="py-2">Contact</Link>
-            {userLoggedIn && (
+            {userLoggedIn ? (
               <>
-                <Link to="/wishlist" className="py-2">Wishlist</Link>
                 <Link to="/profile" className="py-2">Profile</Link>
+                <Link to="/wishlist" className="py-2">Wishlist</Link>
               </>
-            )}
-            {!userLoggedIn && (
+            ) : (
               <Link to="/login" className="py-2">Login</Link>
             )}
+            <Link to="/about" className="py-2">About</Link>
+            <Link to="/contact" className="py-2">Contact</Link>
           </div>
         </div>
       )}

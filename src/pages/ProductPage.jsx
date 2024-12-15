@@ -362,6 +362,43 @@ const ProductPage = ({ }) => {
     }
   };
 
+  const handleBuyNow = () => {
+    if (!selectedSize) {
+      toast.error("Please Select a Size Before Proceeding");
+      return;
+    }
+
+    if (!userLoggedIn) {
+      // Store complete product information
+      const buyNowInfo = {
+        productId: {
+          _id: product._id,
+          title: product.title,
+          price: product.price,
+          discountValue: product.discountValue,
+          images: product.images
+        },
+        selectedSize: selectedAttribute,
+        quantity: productQty,
+        updatedPrice: price || product.price
+      };
+
+      sessionStorage.setItem('buyNowIntent', JSON.stringify(buyNowInfo));
+      toast.info('Please login to continue with your purchase');
+      navigate('/login');
+      return;
+    }
+
+    // For logged-in users
+    setBuyNow([{
+      productId: product,
+      quantity: productQty,
+      selectedSize: selectedAttribute,
+      updatedPrice: price || product.price
+    }]);
+    navigate('/checkout?param=buynow');
+  };
+
   return (
     <section className="fade-in">
       <div data-aos="fade-right" data-aos-duration="1000">
@@ -658,26 +695,7 @@ const ProductPage = ({ }) => {
                     </button>
                   </div>
                   <button
-                    onClick={() => {
-                      if (!selectedSize) {
-                        toast.error("Please select a size before proceeding");
-                        return;
-                      }
-
-                      const buyNowProduct = {
-                        productId: product,
-                        quantity: productQty,
-                        _id: product?._id,
-                        updatedPrice: product.discountValue || product.price,
-                        size: selectedSize.size // Include selected size
-                      };
-
-                      // Store in session storage as backup
-                      sessionStorage.setItem('buyNowProduct', JSON.stringify(buyNowProduct));
-
-                      setBuyNow([buyNowProduct]);
-                      navigate("/checkout?param=buynow");
-                    }}
+                    onClick={handleBuyNow}
                     className="raleway text-center border-[2px] border-gray-500 font-semibold text-sm py-2.5 mt-2 w-full"
                   >
                     Buy Now

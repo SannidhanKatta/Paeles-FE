@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { RiCloseLine } from "react-icons/ri";
+import { RiCloseLine, RiDeleteBin6Line } from "react-icons/ri";
 import { AppContext } from "../context/AppContext";
 import { MainAppContext } from "@/context/MainContext";
 import { toast } from "react-toastify";
@@ -135,20 +135,35 @@ export default function MobileCart({ userData }) {
   };
 
   const removeProduct = async (userId, productId) => {
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_SERVER_URL}/cart/removeProduct`,
-        {
-          userId: userId,
-          productId: productId,
-        }
+    if (userLoggedIn) {
+      try {
+        const response = await axios.put(
+          `${import.meta.env.VITE_SERVER_URL}/cart/removeProduct`,
+          {
+            userId: userId,
+            productId: productId,
+          }
+        );
+        getCart(userId);
+        toast.success("Product Removed from Cart");
+      } catch (error) {
+        console.error("Error removing product from cart:", error);
+        toast.error("Failed to remove product from cart");
+      }
+    } else {
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const updatedCart = localCart.filter(item => item.productId._id !== productId);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      setCart(updatedCart);
+      setCartCount(updatedCart.length);
+
+      // Update total
+      const newTotal = updatedCart.reduce(
+        (acc, item) => acc + item.updatedPrice * item.quantity,
+        0
       );
-      // // console.log(response.data.cart);
-      getCart(userId);
-      toast.error("Product Removed from Cart");
-    } catch (error) {
-      console.error("Error removing product from cart:", error);
-      toast.error("Failed to remove product from cart");
+      setTotal(newTotal);
+      toast.success("Product Removed from Cart");
     }
   };
 
@@ -389,7 +404,7 @@ export default function MobileCart({ userData }) {
                                       </div>
 
                                       {/* Remove Item */}
-                                      <RiCloseLine
+                                      <RiDeleteBin6Line
                                         onClick={() => {
                                           if (userLoggedIn) {
                                             removeProduct(userDetails._id, item?.productId?._id);
@@ -409,7 +424,7 @@ export default function MobileCart({ userData }) {
                                             return toast.success("Product removed from Cart");
                                           }
                                         }}
-                                        className="absolute right-2 text-[22px] text-[#FF7004]"
+                                        className="absolute right-2 text-[20px] text-red-500 hover:text-red-600 transition-colors duration-200"
                                       />
                                     </div>
                                   </div>

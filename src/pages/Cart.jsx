@@ -216,12 +216,20 @@ const Cart = () => {
         toast.error("Failed to remove product from cart");
       }
     } else {
-      // Handle local storage cart
+      // Handle local storage cart removal
       const localCart = JSON.parse(localStorage.getItem("cart")) || [];
       const updatedCart = localCart.filter(item => item.productId._id !== productId);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
       setCart(updatedCart);
       setCartCount(updatedCart.length);
+
+      // Update total
+      const newTotal = updatedCart.reduce(
+        (acc, item) => acc + item.updatedPrice * item.quantity,
+        0
+      );
+      setTotal(newTotal);
+      setCartTotal(newTotal); // Update cart total if you're using it
       toast.success("Product Removed from Cart");
     }
   };
@@ -500,11 +508,7 @@ const Cart = () => {
                         <td className="text-center pl-8 cursor-pointer">
                           <MdOutlineDelete
                             onClick={() => {
-                              if (userLoggedIn) {
-                                removeProduct(userDetails._id, item?.productId?._id);
-                              } else {
-                                // Handle local cart removal
-                              }
+                              removeProduct(userLoggedIn ? userDetails._id : null, item?.productId?._id);
                             }}
                             className="text-[22px]"
                           />

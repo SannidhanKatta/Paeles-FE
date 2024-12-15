@@ -20,7 +20,7 @@ const Login = () => {
   });
   const { email, password } = formData;
   const { setUserLoggedIn } = useAuth();
-  const { user, setUser } = useContext(MainAppContext);
+  const { setUser, setBuyNow } = useContext(MainAppContext);
   const { userData, setUserData } = useState({});
 
   const onChange = (e) =>
@@ -46,7 +46,7 @@ const Login = () => {
         setUserLoggedIn(true);
         // setUserData(res.data.user);
         toast.success(res.data.message);
-        navigate("/");
+        handleLoginSuccess();
       }
     } catch (err) {
       console.error("Login Error:", err.response.data);
@@ -73,6 +73,29 @@ const Login = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handleLoginSuccess = () => {
+    // Check if there was a buy now intent
+    const buyNowIntent = sessionStorage.getItem('buyNowIntent');
+
+    if (buyNowIntent) {
+      try {
+        const buyNowData = JSON.parse(buyNowIntent);
+        // Set the buy now context
+        setBuyNow([buyNowData]);
+        // Clear the stored intent
+        sessionStorage.removeItem('buyNowIntent');
+        // Redirect to checkout
+        navigate('/checkout?param=buynow');
+      } catch (error) {
+        console.error("Error processing buy now data:", error);
+        navigate('/');
+      }
+    } else {
+      // Normal login redirect
+      navigate('/');
+    }
+  };
 
   return (
     <div className=" w-full h-full flex items-center justify-center ">
@@ -185,11 +208,13 @@ const Login = () => {
           </div>
           <div className=" flex items-center justify-center gap-5 mb-5 ">
             <button
-              className="flex items-center justify-center bg-gray-600 text-white px-6 py-2 rounded-md w-full max-w-[300px]"
+              className="flex items-center justify-center bg-white hover:bg-blue-50 text-gray-700 px-6 py-2.5 rounded-lg w-full max-w-[300px] border-2 border-blue-100 transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-md hover:border-blue-200 group"
               onClick={loginWithGoogle}
             >
-              {/* <RiGoogleFill className="mr-2" /> */}
-              Google
+              {/* <RiGoogleFill className="mr-2 text-[#4285f4] group-hover:scale-110 transition-transform duration-300" /> */}
+              <span className="font-medium tracking-wide text-[15px] group-hover:text-blue-600 transition-colors duration-300">
+                Sign in with Google
+              </span>
             </button>
           </div>
         </div>

@@ -214,11 +214,13 @@ const Register = () => {
           </div>
           <div className=" flex items-center justify-center gap-5 mb-5 ">
             <button
-              className="flex items-center justify-center bg-red-600 text-white px-6 py-2 rounded-md w-full max-w-[300px]"
+              className="flex items-center justify-center bg-white hover:bg-blue-50 text-gray-700 px-6 py-2.5 rounded-lg w-full max-w-[300px] border-2 border-blue-100 transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-md hover:border-blue-200 group"
               onClick={registerWithGoogle}
             >
-              {/* <RiGoogleFill className="mr-2" /> */}
-              Google
+              {/* <RiGoogleFill className="mr-2 text-[#4285f4] group-hover:scale-110 transition-transform duration-300" /> */}
+              <span className="font-medium tracking-wide text-[15px] group-hover:text-blue-600 transition-colors duration-300">
+                Sign up with Google
+              </span>
             </button>
           </div>
         </div>
