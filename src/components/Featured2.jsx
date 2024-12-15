@@ -149,7 +149,7 @@ export default function Featured2({
         <div className="flex justify-center mt-6">
           <button
             onClick={handleViewMore}
-            className="bg-gray-100 text-gray-800 border border-gray-300 px-6 py-2 rounded hover:bg-gray-200 transition-all duration-300 shadow-sm flex items-center transform hover:scale-105 active:scale-95 hover:shadow-lg active:shadow-inner"
+            className="bg-gray-600 text-gray-100 border border-gray-300 px-6 py-2 rounded hover:bg-gray-800 transition-all duration-300 shadow-sm flex items-center transform hover:scale-105 active:scale-95 hover:shadow-lg active:shadow-inner"
           >
             View More
             <FaChevronDown className="ml-2" /> {/* Downward arrow icon */}

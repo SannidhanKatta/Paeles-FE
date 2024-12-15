@@ -97,7 +97,7 @@ const Login = () => {
                 type="email"
                 value={email}
                 className=" w-[100%] font-semibold 2xl:w-[100%] border-[1.4px] border-[#999999] p-2 bg-transparent text-[#666666] dark:text-gray-400 text-[14.4px]"
-                placeholder="Company Email"
+                placeholder="Your Email"
                 onChange={onChange}
               />
             </div>

@@ -659,12 +659,23 @@ const ProductPage = ({ }) => {
                   </div>
                   <button
                     onClick={() => {
-                      setBuyNow([{
+                      if (!selectedSize) {
+                        toast.error("Please select a size before proceeding");
+                        return;
+                      }
+
+                      const buyNowProduct = {
                         productId: product,
-                        quantity: 1,
+                        quantity: productQty,
                         _id: product?._id,
-                        updatedPrice: product.discountValue || product.price
-                      }]);
+                        updatedPrice: product.discountValue || product.price,
+                        size: selectedSize.size // Include selected size
+                      };
+
+                      // Store in session storage as backup
+                      sessionStorage.setItem('buyNowProduct', JSON.stringify(buyNowProduct));
+
+                      setBuyNow([buyNowProduct]);
                       navigate("/checkout?param=buynow");
                     }}
                     className="raleway text-center border-[2px] border-gray-500 font-semibold text-sm py-2.5 mt-2 w-full"

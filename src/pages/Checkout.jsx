@@ -162,6 +162,7 @@ const Checkout = () => {
 
     // If it's buy now flow
     if (param?.toLowerCase() === "buynow") {
+      // First try to get from context
       if (buyNow?.length > 0) {
         const total1 = buyNow.reduce((acc, item) => {
           const price = item.productId?.discountValue
@@ -173,7 +174,20 @@ const Checkout = () => {
         setTotal(total1);
         setCart(buyNow);
       } else {
-        navigate(-1);
+        // Fallback to session storage if context is empty
+        const savedBuyNowProduct = JSON.parse(sessionStorage.getItem('buyNowProduct'));
+        if (savedBuyNowProduct) {
+          const price = savedBuyNowProduct.productId?.discountValue
+            ? savedBuyNowProduct.productId.discountValue
+            : (savedBuyNowProduct.productId?.price || savedBuyNowProduct.updatedPrice);
+          const total1 = Number(price) * Number(savedBuyNowProduct.quantity || 1);
+          setSubTotal(total1);
+          setTotal(total1);
+          setCart([savedBuyNowProduct]);
+        } else {
+          // If no product data found, navigate back
+          navigate(-1);
+        }
       }
     } else {
       // Regular cart flow
