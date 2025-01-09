@@ -27,43 +27,40 @@ const FeatureList = [
     id: 1,
     heading: "FAST DELIVERY",
     content:
-      "We provide how all this is taken dea of denouncing pleasure and sing",
+      "We ensure your order is processed and shipped promptly to provide a seamless shopping experience.",
   },
   {
     id: 2,
     heading: "SECURE PAYMENT",
-    content: `We provide how all this mistaken
-        dea of denouncing pleasure and sing`,
+    content: `Our platform uses advanced security measures to safeguard your payment information and ensure safe transactions.`,
   },
   {
     id: 3,
     heading: "EASY ORDER TRACKING",
-    content: `We provide how all this mistaken dea of denouncing pleasure and sing`,
+    content: `Stay updated with real-time tracking of your order from the moment it is dispatched until it reaches your doorstep.`,
   },
   {
     id: 4,
     heading: "24/7 SUPPORT",
-    content: `We provide how all this mistaken
-       dea of denouncing pleasure and sing`,
+    content: `Our dedicated support team is available around the clock to assist with any questions or concerns.`,
   },
   {
     id: 5,
     heading: "QUALITY PRODUCT",
-    content: `We provide how all this mistaken dea of denouncing pleasure and sing`,
+    content: `We prioritize offering high-quality, durable products that meet your expectations and enhance your experience.`,
   },
   {
     id: 6,
-    heading: "MONEY BACK GUARNTEE",
-    content: `We provide how all this mistaken
-        dea of denouncing pleasure and sing`,
+    heading: "MONEY BACK GUARANTEE",
+    content: `We offer a hassle-free return and refund policy to ensure your satisfaction with every purchase.`,
   },
   {
     id: 7,
     heading: "FREE RETURN",
-    content: `We provide how all this mistaken
-        dea of denouncing pleasure and sing`,
+    content: `Enjoy free returns within the specified period for eligible items, making your shopping experience worry-free.`,
   },
 ];
+
 const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -138,9 +135,9 @@ const About = () => {
             WE ALWAYS PROVIDE IMPORTANCE...
           </h3>
           <p className=" text-[12.7px] md:text-[13.6px] font-[400] md:w-[45%] text-justify mt-2 md:mt-4 mb-4 md:mb-8 text-[#7A7A7A] dark:text-gray-600">
-            We provide how all this mistaken idea of denouncing pleasure and
-            sing pain was born will give you a complete account of the system,
-            and expound the actual
+            We prioritize our customers by offering reliable shipping, secure payments, easy returns, and a 24/7 support system.
+            At our core, we ensure transparency, efficiency, and high-quality service with every interaction,
+            making your satisfaction our top priority.
           </p>
         </div>
 

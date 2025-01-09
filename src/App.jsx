@@ -24,6 +24,10 @@ import "@google/model-viewer/dist/model-viewer.min.js";
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also import AOS styles
 import { gsap } from 'gsap';
+import ShippingPolicy from './pages/policies/ShippingPolicy';
+import ExchangePolicy from './pages/policies/ExchangePolicy';
+import TermsAndConditions from './pages/policies/TermsAndConditions';
+import PrivacyPolicy from './pages/policies/PrivacyPolicy';
 
 AOS.init();
 
@@ -112,6 +116,10 @@ const App = () => {
 
             <Route path="/spin" element={<Smv />} />
             <Route path="/admindashboard/*" element={<AdminDashboard />} />
+            <Route path="/shipping-policy" element={<ShippingPolicy />} />
+            <Route path="/exchange-policy" element={<ExchangePolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           </Routes>
         </div>
       )}

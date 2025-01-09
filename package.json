@@ -13,6 +13,8 @@
     "@ar-js-org/ar.js": "^3.4.5",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@google/model-viewer": "^3.2.1",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.3",

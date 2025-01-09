@@ -399,6 +399,28 @@ const ProductPage = ({ }) => {
     navigate('/checkout?param=buynow');
   };
 
+
+
+  // Ensure the image is draggable even when zoomed
+  const handleMouseMove = (e) => {
+    const img = e.currentTarget.querySelector('img');
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    img.style.transform = `translate(${dx}px, ${dy}px) scale(2)`; // Keep zoomed state while dragging
+  };
+
+  // Update the mouse down event to include the new handleMouseMove
+  const handleMouseDown = (e) => {
+    const img = e.currentTarget.querySelector('img');
+    const startX = e.clientX;
+    const startY = e.clientY;
+
+    document.addEventListener('mousemove', (e) => handleMouseMove(e, img, startX, startY));
+    document.addEventListener('mouseup', () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    });
+  };
+
   return (
     <section className="fade-in">
       <div data-aos="fade-right" data-aos-duration="1000">
@@ -444,34 +466,55 @@ const ProductPage = ({ }) => {
           ) : (
             <div className=" w-full  h-full">
               {viewMainImg && (
-                <div className=" fixed w-full h-[100vh] flex items-center justify-center -top-0 z-50 left-0 bg-black/20">
-                  <div className=" relative z-50 w-[70%] md:w-[50%] h-[60%]">
-                    <IoClose
-                      onClick={() => {
-                        SetViewMainImg(false);
-                      }}
-                      className=" absolute text-[24px] -top-20 bg-orange-400 cursor-pointer right-0 z-50"
-                    />
-                    <img
-                      src={activeImage}
-                      alt={activeImage}
-                      className=" w-full object-cover border border-white h-[80vh] absolute -top-20"
-                    />
+                <div
+                  className="fixed inset-0 bg-black/50 z-[998]"
+                  onClick={() => SetViewMainImg(false)}
+                >
+                  <div
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] md:w-[50%] lg:w-[40%] bg-white p-4"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="relative overflow-hidden">
+                      <IoClose
+                        onClick={() => SetViewMainImg(false)}
+                        className="absolute top-2 right-2 text-[24px] bg-orange-400 cursor-pointer"
+                      />
+                      <div
+                        className="relative w-full h-full cursor-move"
+                        onMouseDown={handleMouseDown}
+                      >
+                        <img
+                          src={activeImage}
+                          alt={activeImage}
+                          className="w-full h-full object-contain transition-transform duration-300"
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'scale(2)'; // Zoom in
+                            e.currentTarget.style.transition = 'transform 0.5s ease'; // Smooth transition
+                            e.currentTarget.style.cursor = 'url(/path/to/magnifying-glass-icon.png), auto'; // Change cursor to magnifying glass
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'scale(1)'; // Zoom out
+                            e.currentTarget.style.cursor = 'auto'; // Reset cursor
+                          }}
+                          style={{ transformOrigin: 'center' }} // Ensure zoom is centered
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
               <div className=" bg-white dark:bg-white p-[2rem] border w-full flex flex-col md:grid grid-cols-9 gap-2 sm:gap-4 lg:gap-10 mb-3 lg:mb-10">
                 <div className="flex relative flex-col items-start justify-start md:col-span-4 lg:col-span-3 gap-4">
-                  <div className="w-full h-fit aspect-w-1 aspect-h-1">
+                  <div className="w-full h-fit aspect-w-1 aspect-h-1 relative">
                     <img
                       src={activeImage}
                       alt={activeImage}
-                      onClick={() => {
-                        SetViewMainImg(true);
-                      }}
+                      onClick={() => SetViewMainImg(true)}
                       className="h-full w-full object-cover cursor-pointer border border-black"
                     />
                   </div>
+
+                  {/* Thumbnail images section */}
                   <div className="raleway grid grid-cols-4 gap-1">
                     {/* Main image */}
                     <img
@@ -907,15 +950,14 @@ const ProductPage = ({ }) => {
                   </div>
                 </div>
               </div>
-
-              <div className=" flex flex-col ">
-                <div className=" flex items-start justify-left border-b border-gray-400 ">
+              <div className="flex flex-col">
+                <div className="flex items-start justify-left border-b border-gray-400">
                   <p
                     onClick={() => {
                       SetActiveTab(1);
                     }}
                     className={`raleway cursor-pointer text-center text-[11px] md:text-[16px] 2xl:text-[20px] py-1.5 px-7 ${activeTab === 1 && "bg-white dark:text-black"
-                      } `}
+                      }`}
                   >
                     Details
                   </p>
@@ -924,69 +966,74 @@ const ProductPage = ({ }) => {
                       SetActiveTab(3);
                     }}
                     className={`raleway cursor-pointer text-center text-[11px] md:text-[16px] 2xl:text-[20px] py-1.5 px-7 ${activeTab === 3 && "bg-white dark:text-black"
-                      } `}
+                      }`}
                   >
                     Reviews ({reviews.length})
                   </p>
                 </div>
-              </div>
-              {activeTab === 1 ? (
-                <div className="bg-white flex flex-col text-xs sm:text-sm lg:p-7 py-3 lg:py-10 font-[400]">
-                  <p className=" raleway text-[12px] md:text-[13.3px] 2xl:text-[14px]">
-                    {product?.editorContent && parse(product?.editorContent)}
-                  </p>
-                </div>
-              ) : (
-                <div className="bg-white flex flex-col items-center justify-center text-xs sm:text-sm lg:p-7 py-3 lg:py-10 font-[400]">
-                  {/* {// console.log(reviews)} */}
-                  {reviews.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className=" flex flex-col md:flex-row items-center justify-between shadow-sm shadow-black/30 bg-yellow-200 dark:bg-white/20 rounded-md my-2 md:w-[60%] p-5 "
-                      >
-                        <div>
-                          <p>
-                            Comment:
-                            <span className=" ml-1  font-semibold">
-                              {item.title}
-                            </span>
-                          </p>
-                          <p className=" flex items-center gap-1">
-                            Rating:
-                            <Stars stars={item?.rating} />({item?.rating})
-                          </p>
-                          <p>
-                            Review:
-                            <span className=" ml-1  font-semibold">
-                              {item.comment}
-                            </span>
-                          </p>
-                        </div>
-                        <div>
-                          <p>
-                            By:
-                            <span className=" ml-1  font-semibold">
-                              {item?.userId?.name}
-                            </span>
-                          </p>
-                          <p>
-                            Date:
-                            <span className=" ml-1  font-semibold">
+                {activeTab === 1 ? (
+                  <div className="bg-white flex flex-col text-xs sm:text-sm lg:p-7 py-3 lg:py-10 font-[400]">
+                    <p className="raleway text-[12px] md:text-[13.3px] 2xl:text-[14px]">
+                      {parse(product?.editorContent || "")}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-white flex flex-col items-center justify-center text-xs sm:text-sm lg:p-7 py-3 lg:py-10 font-[400]">
+                    {reviews.map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="bg-white shadow-md border border-gray-300 rounded-lg p-4 w-full md:w-[60%] my-2"
+                        >
+                          <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center">
+                              <img
+                                src="\public\Images\review-profile-pic.jpg" // Optional: Replace with user's profile image if available
+                                alt="User"
+                                className="w-10 h-10 rounded-full mr-3"
+                              />
+                              <p className="text-sm font-medium">{item?.userId?.name}</p>
+                            </div>
+                            <p className="text-xs text-gray-500">
                               {item.createdAt.split("T")[0]}
-                            </span>
-                          </p>
+                            </p>
+                          </div>
+                          <div className="mt-2">
+                            <p className="font-semibold text-base">{item.title}</p>
+                            <div className="flex items-center mt-1">
+                              <div className="flex">
+                                {/* Apply gold color to stars */}
+                                {[...Array(5)].map((_, i) => (
+                                  <svg
+                                    key={i}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className={`w-5 h-5 ${i < item?.rating ? 'text-yellow-800' : 'text-gray-300'}`}
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    aria-hidden="true"
+                                  >
+                                    <path d="M9.049 2.927C9.2 2.454 9.8 2.454 9.951 2.927l1.302 3.693 4.022.373c.429.041.609.586.299.876l-3.09 2.798 1.058 4.06c.111.426-.357.743-.736.543l-3.49-2.091-3.49 2.091c-.379.2-.847-.117-.736-.543l1.058-4.06-3.09-2.798c-.309-.29-.129-.835.299-.876l4.022-.373L9.049 2.927z" />
+                                  </svg>
+                                ))}
+                              </div>
+                              <span className="ml-2 text-sm font-medium">
+                                {item?.rating}/5
+                              </span>
+                            </div>
+                            <p className="mt-2 text-sm">{item.comment}</p>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
 
               <div className=" lg:hidden">
-                <h4 className=" raleway text-[14px] font-[600] text-[#000] mb-1 ">
+                {/* <h4 className=" raleway text-[14px] font-[600] text-[#000] mb-1 ">
                   You might also like
-                </h4>
+                </h4> */}
                 <div className=" w-full h-full grid-cols-2 sm:grid-cols-3 grid lg:grid-cols-4 gap-5 ">
                   {products
                     ?.filter((e) => {

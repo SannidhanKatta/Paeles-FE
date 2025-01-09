@@ -25,12 +25,13 @@ const FeatureList = [
     id: 4,
     heading: "24/7 SUPPORT",
     content: `We provide how all this mistaken
-       dea of denouncing pleasure and sing`,
+      idea of denouncing pleasure and sing`,
   },
   {
     id: 5,
     heading: "QUALITY PRODUCT",
-    content: `We provide how all this mistaken dea of denouncing pleasure and sing`,
+    content: `We provide how all this mistaken
+      idea of denouncing pleasure and sing`,
   },
   {
     id: 6,
@@ -68,7 +69,7 @@ const Contact = () => {
 
       <div className=" w-full lg:mt-5">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d100939.99640996094!2d-122.52000182048364!3d37.75780703819833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb9fe5f285e3d%3A0x8b5109a227086f55!2sCalifornia%2C%20USA!5e0!3m2!1sen!2sin!4v1711962914723!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243646.90509269088!2d78.24323125666693!3d17.412281015392325!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99daeaebd2c7%3A0xae93b78392bafbc2!2sHyderabad%2C%20Telangana%2C%20India!5e0!3m2!1sen!2sin!4v1711963789154!5m2!1sen!2sin"
           className=" w-full h-[200px] lg:h-[400px]"
           allowFullScreen=""
           loading="lazy"
@@ -156,10 +157,9 @@ const Contact = () => {
                 Contact Us
               </h4>
               <p className=" text-[#7A7A7A] dark:text-gray-500 text-[12px] md:text-[13px] 2xl:text-[14px] font-[400]">
-                Claritas est etiam processus dynamicus, qui sequitur mutationem
-                consuetudium lectorum. Mirum est notare quam littera gothica,
-                quam nunc putamus parum claram anteposuerit litterarum formas
-                human.
+                Should you have any questions about our privacy practices or this Privacy Policy, or
+                if you would like to exercise any of the rights available to you, please call +91
+                7337351664 or email us at support@paeless.com
               </p>
 
               <div className=" mt-3 py-1 flex flex-col font-[600] plus-jakarta text-[#222222] dark:text-gray-400  text-[15px] md:text-[19px] 2xl:text-[20px]">
@@ -168,7 +168,7 @@ const Contact = () => {
                   Address
                 </p>
                 <span className="text-[#666666] dark:text-gray-500 text-[12px] md:text-[13px] 2xl:text-[14px] font-[500] plus-jakarta">
-                  123 Main Street, Anytown, CA 12345 – USA
+                  HANDY BASKET (OPC) PRIVATE LIMITED, H-No: - 2-161/1, Amangal, Hyderabad, Telangana, India - 509321
                 </span>
               </div>
               <div className=" mt-3 py-6 border-t border-b border-gray-300 flex flex-col font-[600] plus-jakarta text-[#222222] dark:text-gray-400 text-[15px] md:text-[19px] 2xl:text-[20px]">
@@ -176,9 +176,9 @@ const Contact = () => {
                   <HiPhone className=" text-[15px]" /> Phone
                 </p>
                 <span className="text-[#666666] dark:text-gray-500 text-[12px] md:text-[13px] 2xl:text-[14px] font-[500] plus-jakarta">
-                  Mobile: (08) 123 456 789
+                  Mobile: +91 7337351664
                   <br />
-                  Hotline: 1009 678 456
+                  WhatsApp: +91 7337351664
                 </span>
               </div>
               <div className=" mt-3 py-1 flex flex-col font-[600] plus-jakarta text-[#222222] dark:text-gray-400 text-[15px] md:text-[19px] 2xl:text-[20px]">
@@ -186,9 +186,7 @@ const Contact = () => {
                   <MdEmail className=" text-[17px]" /> Email
                 </p>
                 <span className="text-[#666666] dark:text-gray-500 text-[12px] md:text-[13px] 2xl:text-[14px] font-[500] plus-jakarta">
-                  yourmail@domain.com
-                  <br />
-                  support@hastech.company
+                  support@paeless.com
                 </span>
               </div>
             </div>

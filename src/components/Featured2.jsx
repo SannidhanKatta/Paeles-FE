@@ -146,7 +146,7 @@ export default function Featured2({
 
       {/* View More Button */}
       {allProducts.length > visibleProducts.length && (
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-4 mb-8">
           <button
             onClick={handleViewMore}
             className="bg-gray-600 text-gray-100 border border-gray-300 px-6 py-2 rounded hover:bg-gray-800 transition-all duration-300 shadow-sm flex items-center transform hover:scale-105 active:scale-95 hover:shadow-lg active:shadow-inner"
