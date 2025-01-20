@@ -3,15 +3,13 @@ import React from 'react';
 const PrivacyPolicy = () => {
     return (
         <div className="max-w-4xl mx-auto px-4 py-8">
-            <div>
-                <h1 className="text-3xl font-bold mb-8 underline">PRIVACY POLICY</h1>
-                <p className='mb-4'>
-                    This Privacy Policy describes how HANDY BASKET( OPC) PVT LTD (the "Site", "we", "us", or "our") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.paeless.com (the "Site") or otherwise communicate with us (collectively, the "Services"). For purposes of this Privacy Policy, "you" and "your" means you as the user of the Services, whether you are a customer, website visitor, or another individual whose information we have collected pursuant to this Privacy Policy.
-                </p>
-                <p className='mb-4'>
-                    Please read this Privacy Policy carefully. By using and accessing any of the Services, you agree to the collection, use, and disclosure of your information as described in this Privacy Policy. If you do not agree to this Privacy Policy, please do not use or access any of the Services.
-                </p>
-            </div>
+            <h1 className="text-3xl font-bold mb-8 underline">PRIVACY POLICY</h1>
+            <p className='mb-4'>
+                This Privacy Policy describes how HANDY BASKET( OPC) PVT LTD (the "Site", "we", "us", or "our") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.paeless.com (the "Site") or otherwise communicate with us (collectively, the "Services"). For purposes of this Privacy Policy, "you" and "your" means you as the user of the Services, whether you are a customer, website visitor, or another individual whose information we have collected pursuant to this Privacy Policy.
+            </p>
+            <p className='mb-4'>
+                Please read this Privacy Policy carefully. By using and accessing any of the Services, you agree to the collection, use, and disclosure of your information as described in this Privacy Policy. If you do not agree to this Privacy Policy, please do not use or access any of the Services.
+            </p>
 
             <div>
                 <h2 className="text-xl font-semibold mb-4">Changes to This Privacy Policy</h2>
@@ -114,19 +112,19 @@ const PrivacyPolicy = () => {
             </div>
 
             <div>
-                <h2 className="text-xl font-semibold mb-4">Children’s Data</h2>
+                <h2 className="text-xl font-semibold mb-4">Children's Data</h2>
                 <p className='mb-4'>
                     The Services are not intended to be used by children, and we do not knowingly collect any personal information about children. If you are the parent or guardian of a child who has provided us with their personal information, you may contact us using the contact details set out below to request that it be deleted.
                 </p>
                 <p className='mb-4'>
-                    As of the Effective Date of this Privacy Policy, we do not have actual knowledge that we “share” or “sell” (as those terms are defined in applicable law) personal information of individuals under 16 years of age.
+                    As of the Effective Date of this Privacy Policy, we do not have actual knowledge that we "share" or "sell" (as those terms are defined in applicable law) personal information of individuals under 16 years of age.
                 </p>
             </div>
 
             <div>
                 <h2 className="text-xl font-semibold mb-4">Security and Retention of Your Information</h2>
                 <p className='mb-4'>
-                    Please be aware that no security measures are perfect or impenetrable, and we cannot guarantee “perfect security.” In addition, any information you send to us may not be secure while in transit. We recommend that you do not use unsecure channels to communicate sensitive or confidential information to us.
+                    Please be aware that no security measures are perfect or impenetrable, and we cannot guarantee "perfect security." In addition, any information you send to us may not be secure while in transit. We recommend that you do not use unsecure channels to communicate sensitive or confidential information to us.
                 </p>
                 <p className='mb-4'>
                     How long we retain your personal information depends on different factors, such as whether we need the information to maintain your account, to provide the Services, comply with legal obligations, resolve disputes or enforce other applicable contracts and policies.

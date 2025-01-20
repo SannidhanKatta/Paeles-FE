@@ -226,7 +226,7 @@ const Header = () => {
   }, [isMobileMenuOpen]);
 
   return (
-    <div className="w-full">
+    <div className="w-full sticky top-0 z-[999] bg-white shadow-md">
       <div className="px-[3%] md:px-[8%] py-4 flex items-center justify-between bg-white dark:bg-white dark:text-black bottom-shadow">
         {/* Hamburger menu for mobile */}
         <div className="lg:hidden">
