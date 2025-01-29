@@ -159,6 +159,7 @@ const Orders = ({ userData }) => {
           {orders?.map((order, orderIndex) => (
             <div key={orderIndex}>
               {order?.products?.map((product, productIndex) => {
+                console.log("product",product);
                 return (
                   <div
                     className="flex flex-col md:flex-row md:justify-between w-full dark:bg-white/40 bg-gray-100 p-2 border-b border-gray-300"

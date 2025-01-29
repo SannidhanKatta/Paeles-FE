@@ -28,6 +28,7 @@ import ShippingPolicy from './pages/policies/ShippingPolicy';
 import ExchangePolicy from './pages/policies/ExchangePolicy';
 import TermsAndConditions from './pages/policies/TermsAndConditions';
 import PrivacyPolicy from './pages/policies/PrivacyPolicy';
+import ScrollToTop from "./components/ScrollToTop";
 
 AOS.init();
 
@@ -46,6 +47,8 @@ const App = () => {
   return (
     <AppProvider>
       <Header />
+      <ScrollToTop/>
+      <ToastContainer/>
       <Routes>
         {userRoutes.map((item, index) => {
           return (
