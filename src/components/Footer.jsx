@@ -12,7 +12,7 @@ const Footer = () => {
           {/* Logo Section */}
           <div className="flex justify-center lg:justify-start mb-12 lg:mb-0 lg:mr-64">
             <Link to="/">
-              <img src="/mainLogo.png" className="h-16 lg:h-20" alt="Paeles Logo" />
+              <img src="/mainLogo.png" className="h-16 lg:h-20" alt="Paeless Logo" />
             </Link>
           </div>
 
@@ -114,7 +114,7 @@ const Footer = () => {
         {/* Copyright Section */}
         <div className="text-center">
           <span className="text-sm text-gray-500">
-            © 2024-25 Paeles. All Rights Reserved.
+            © 2024-25 Paeless. All Rights Reserved.
           </span>
         </div>
       </div>

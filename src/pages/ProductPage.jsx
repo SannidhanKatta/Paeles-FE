@@ -364,7 +364,7 @@ const ProductPage = ({ }) => {
 
   const handleBuyNow = () => {
     if (!selectedSize) {
-      toast.error("Please Select a Size Before Proceeding");
+      toast.error("Please select a size");
       return;
     }
 
@@ -378,11 +378,12 @@ const ProductPage = ({ }) => {
           discountValue: product.discountValue,
           images: product.images
         },
-        selectedSize: selectedAttribute,
+        selectedSize: selectedSize,
         quantity: productQty,
-        updatedPrice: price || product.price
+        updatedPrice: minprice == 0 ? price : minprice
       };
 
+      // Store buy now info in sessionStorage
       sessionStorage.setItem('buyNowIntent', JSON.stringify(buyNowInfo));
       toast.info('Please login to continue with your purchase');
       navigate('/login');
@@ -390,12 +391,14 @@ const ProductPage = ({ }) => {
     }
 
     // For logged-in users
-    setBuyNow([{
+    const buyNowProduct = {
       productId: product,
       quantity: productQty,
-      selectedSize: selectedAttribute,
-      updatedPrice: price || product.price
-    }]);
+      selectedSize: selectedSize,
+      updatedPrice: minprice == 0 ? price : minprice
+    };
+
+    setBuyNow([buyNowProduct]);
     navigate('/checkout?param=buynow');
   };
 
@@ -584,22 +587,6 @@ const ProductPage = ({ }) => {
                     {product?.title}
                   </h4>
                   <p className=" pt-[20px] text-[1.5rem] md:text-[1.7rem] 2xl:text-[1.9rem] font-semibold raleway text-[#1d1d1d]">
-                    {product?.discountValue > 0 ? (
-                      <>
-                        <span className="text-gray-400 text-[1.4rem] line-through">
-                          {currency} {product.price}
-                        </span>
-                        <span className="text-black text-[1.6rem] ml-2 font-[600]">
-                          {currency} {product.discountValue}
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-black text-[1.6rem] font-[600]">
-                        {currency} {product.price}
-                      </span>
-                    )}
-                  </p>
-                  <p className="text-[10px] md:text-[12px] 2xl:text-[13px] -mt-2 raleway">
                     Tax Included
                   </p>
 

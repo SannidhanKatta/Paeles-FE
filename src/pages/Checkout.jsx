@@ -72,6 +72,34 @@ const Checkout = () => {
       phone: phoneCode1 + phone,
     };
 
+    // Format the products array correctly based on the flow
+    let productsToSend;
+    if (param?.toLowerCase() === "buynow") {
+      // For buy now flow
+      productsToSend = buyNow.map(item => {
+        console.log("Buy now item:", item); // Debug log
+        return {
+          productId: item.productId._id,
+          quantity: item.quantity || 1,
+          price: item.productId.discountValue || item.productId.price,
+          selectedSize: item.selectedSize // Keep the original selectedSize
+        };
+      });
+    } else {
+      // For cart flow
+      productsToSend = cart.map(item => ({
+        productId: item.productId._id,
+        quantity: item.quantity,
+        price: item.updatedPrice,
+        selectedSize: item.selectedSize
+      }));
+    }
+
+    // Debug logs
+    console.log("Products to send:", productsToSend);
+    console.log("User details:", userDetailsUpdated);
+    console.log("Total amount:", total);
+
     try {
       const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/order/phonepe-payment`, {
         method: "POST",
@@ -79,24 +107,29 @@ const Checkout = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          products: cart,
+          products: productsToSend,
           customer: userDetailsUpdated,
-          totalAmount: total,
+          totalAmount: total
         }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error:", errorData);
+        throw new Error(errorData.message || "Failed to initiate payment");
+      }
+
       const result = await response.json();
-      console.log(result);
+      console.log("Payment response:", result);
 
       if (result.success && result.paymentUrl) {
-        // Redirect to PhonePe Payment Page
         window.location.href = result.paymentUrl;
       } else {
-        console.error("Error initiating PhonePe payment:", result.message);
-        // Handle error
+        throw new Error(result.message || "Failed to initiate payment");
       }
     } catch (error) {
-      console.error("Error in PhonePe Checkout:", error.message);
+      console.error("Error in PhonePe Checkout:", error);
+      toast.error(error.message || "Payment initialization failed");
     } finally {
       setLoading(false);
     }

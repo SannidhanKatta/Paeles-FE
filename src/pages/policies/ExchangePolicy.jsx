@@ -58,6 +58,16 @@ const ExchangePolicy = () => {
                         support@paeless.com
                     </a>.
                 </p>
+
+                <p className="font-bold text-lg">RETURN</p>
+                <p>
+                    If any scenario if you want to return the product need to return with in 7 days after delivery.
+                </p>
+
+                <p className="font-bold text-lg">Refund Policy</p>
+                <p>
+                    Once the refund is approved it will take 7 business days to credit to your bank account.
+                </p>
             </div>
         </div>
     );

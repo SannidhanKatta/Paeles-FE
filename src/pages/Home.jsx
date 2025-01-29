@@ -252,11 +252,11 @@ const Home = () => {
     <section>
       <div data-aos="fade-up" data-aos-duration="1000">
         <Helmet>
-          <title>{"PAELES"} </title>
+          <title>{"PAELESS"} </title>
           <meta name="description" />
-          <meta name="description" content={"PAELES"} />
+          <meta name="description" content={"PAELESS"} />
           {/* <meta name="keywords" content={} /> */}
-          <meta name="author" content={"PAELES"} />
+          <meta name="author" content={"PAELESS"} />
           {/* Add more meta tags as needed */}
         </Helmet>
         {showModal && <div className="modal-overlay" />}

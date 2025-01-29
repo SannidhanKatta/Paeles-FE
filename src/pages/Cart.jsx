@@ -32,18 +32,20 @@ const Cart = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUserDetails(user);
     if (userLoggedIn == true) {
-      getCart(user._id);
+      const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (localCart.length > 0) {
+        mergeCartsAndClear(user._id, localCart);
+      } else {
+        getCart(user._id);
+      }
     } else {
       var tempCart = JSON.parse(localStorage.getItem("cart")) || [];
-      // // // console.log(tempCart);
       setCartCount(tempCart?.length);
       setCart(tempCart || []);
-      // if (cart?.length > 0) {
       const total1 = tempCart?.reduce(
         (acc, obj) => acc + obj.updatedPrice * obj.quantity,
         0
       );
-      console.log(total1);
       setTotal(total1);
     }
   }, [userLoggedIn]);
@@ -333,6 +335,72 @@ const Cart = () => {
     }
     return acc; // No discount for this item
   }, 0);
+
+  const mergeCartsAndClear = async (userId, localCart) => {
+    try {
+      // First get the existing server cart
+      const serverCartResponse = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/cart/${userId}`
+      );
+      const serverCart = serverCartResponse.data.cart.products;
+
+      // Add each local cart item to the server cart if it doesn't already exist
+      for (const localItem of localCart) {
+        const existingItem = serverCart.find(
+          serverItem =>
+            serverItem.productId._id === localItem.productId._id &&
+            serverItem.selectedSize === localItem.size
+        );
+
+        if (!existingItem) {
+          // Item doesn't exist in server cart, add it
+          await axios.post(
+            `${import.meta.env.VITE_SERVER_URL}/cart/addProduct`,
+            {
+              userId: userId,
+              productId: localItem.productId._id,
+              quantity: localItem.quantity,
+              selectedSize: localItem.size,
+              updatedPrice: localItem.updatedPrice
+            }
+          );
+        } else {
+          // Item exists, update quantity if needed
+          const newQuantity = existingItem.quantity + localItem.quantity;
+          await axios.post(
+            `${import.meta.env.VITE_SERVER_URL}/cart/addProduct`,
+            {
+              userId: userId,
+              productId: localItem.productId._id,
+              quantity: newQuantity,
+              selectedSize: localItem.size,
+              updatedPrice: localItem.updatedPrice
+            }
+          );
+        }
+      }
+
+      // Clear local cart after successful merge
+      localStorage.removeItem("cart");
+
+      // Get the final cart count from server and update it
+      const finalCartResponse = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/cart/${userId}`
+      );
+      setCartCount(finalCartResponse.data.cart.products.length);
+
+      // Get updated cart from server
+      await getCart(userId);
+
+      // Only show success toast if there were items to merge
+      if (localCart.length > 0) {
+        toast.success("Cart items merged successfully");
+      }
+    } catch (error) {
+      console.error("Error merging carts:", error);
+      // Remove error toast since it's not needed
+    }
+  };
 
   return (
     <>

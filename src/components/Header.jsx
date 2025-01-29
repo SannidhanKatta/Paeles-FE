@@ -228,12 +228,19 @@ const Header = () => {
   return (
     <div className="w-full sticky top-0 z-[999] bg-white shadow-md">
       <div className="px-[3%] md:px-[8%] py-4 flex items-center justify-between bg-white dark:bg-white dark:text-black bottom-shadow">
-        {/* Hamburger menu for mobile */}
+        {/* Hamburger menu for mobile - Updated with toggle icon */}
         <div className="lg:hidden">
-          <RiMenu3Line
-            className="text-2xl cursor-pointer"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          />
+          {isMobileMenuOpen ? (
+            <RiMenu3Fill
+              className="text-2xl cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+          ) : (
+            <RiMenu3Line
+              className="text-2xl cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(true)}
+            />
+          )}
         </div>
 
         {/* Logo */}
@@ -241,7 +248,7 @@ const Header = () => {
           <img
             src={mainlogo}
             className="w-[100px] md:w-[150px]"
-            alt="PAELES"
+            alt="PAELESS"
           />
         </Link>
 
@@ -301,31 +308,25 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu with animation */}
       {isMobileMenuOpen && (
         <div
           ref={mobileMenuRef}
-          className="lg:hidden bg-white dark:bg-gray-800 py-2 px-4 absolute w-full z-50"
+          className="lg:hidden bg-white dark:bg-gray-800 py-2 px-4 absolute w-full z-50 transition-all duration-300 ease-in-out"
         >
           <div className="flex flex-col space-y-2">
-            {/* Comment out mobile search bar */}
-            {/* <input
-              type="text"
-              placeholder="Search your products here"
-              className="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            /> */}
-            <Link to="/" className="py-2">Home</Link>
-            <Link to="/shop/all/all" className="py-2">Shop</Link>
+            <Link to="/" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+            <Link to="/shop/all/all" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Shop</Link>
             {userLoggedIn ? (
               <>
-                <Link to="/profile" className="py-2">Profile</Link>
-                <Link to="/wishlist" className="py-2">Wishlist</Link>
+                <Link to="/profile" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
+                <Link to="/wishlist" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Wishlist</Link>
               </>
             ) : (
-              <Link to="/login" className="py-2">Login</Link>
+              <Link to="/login" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
             )}
-            <Link to="/about" className="py-2">About</Link>
-            <Link to="/contact" className="py-2">Contact</Link>
+            <Link to="/about" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
+            <Link to="/contact" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
           </div>
         </div>
       )}
