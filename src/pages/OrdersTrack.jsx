@@ -81,7 +81,7 @@ const ordersTrack = ({ order, status, deliveryDate, createdAt }) => {
           </h3>
           <Link
             className="flex items-center"
-            to={`/product/${order?.title}`}
+            to={`/product/${order?.product?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${order?.product?._id}`}
             onClick={() => {
               sessionStorage.setItem(
                 "productPageId",

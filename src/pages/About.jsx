@@ -84,11 +84,11 @@ const About = () => {
 
       <section className=" px-[4%] md:px-[8%] mt-4 md:mt-14 ">
         <div className=" flex flex-col md:flex-row gap-3 md:gap-10 mb-8 md:mb-12 ">
-          <img
+          {/* <img
             className=" w-full h-[230px] md:h-[390px]  2xl:w-[855px] object-cover "
             src="/Images/b1.png"
             alt="ab1"
-          />
+          /> */}
           <div className=" flex flex-col">
             <h3 className=" text-[20px] md:text-[26px] uppercase text-[#363F4D]  dark:text-gray-400  font-[700] plus-jakarta ">
               WELCOME TO{" "}
@@ -110,11 +110,11 @@ const About = () => {
           {CardList.map((card, index) => {
             return (
               <div key={index}>
-                <img
+                {/* <img
                   className=" w-full h-[200px] md:h-[300px] object-cover "
                   src={card.img}
                   alt="card-img"
-                />
+                /> */}
                 <div className=" mt-4 md:mt-10">
                   <h4 className=" text-[17px] md:text-[20px] font-[700] plus-jakarta text-[#363F4D]  dark:text-gray-400  md:mb-2 ">
                     {card.heading}
@@ -156,11 +156,11 @@ const About = () => {
               );
             })}
           </div>
-          <img
+          {/* <img
             className=" mb-2 md:mb-0 h-[210px] 2xl:h-[288px] object-cover "
             src="/Images/b5.png"
             alt="ab1"
-          />
+          /> */}
         </div>
       </section>
     </div>

@@ -324,7 +324,7 @@ export default function MobileCart({ userData }) {
                                   >
                                     {/* Product Image Link */}
                                     <Link
-                                      to={`/product/${item?.productId?.title}`}
+                                      to={`/product/${item.productId?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item.productId?._id}`}
                                       onClick={() => {
                                         setProductPageId(item?.productId?._id);
                                       }}
@@ -340,7 +340,7 @@ export default function MobileCart({ userData }) {
                                     <div className="col-span-3 flex flex-col text-[12.3px]">
                                       {/* Product Title Link */}
                                       <Link
-                                        to={`/product/${item?.productId?.title}`}
+                                        to={`/product/${item.productId?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item.productId?._id}`}
                                         onClick={() => {
                                           setProductPageId(item?.productId?._id);
                                           sessionStorage.setItem("productPageId", JSON.stringify(item?.productId?._id));

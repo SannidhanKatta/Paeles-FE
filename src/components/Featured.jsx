@@ -135,7 +135,7 @@ export default function Featured({
                       </div>
 
                       <Link
-                        to={`/product/${pro?.title?.replace(/\//g, "")}`}
+                        to={`/product/${pro?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${pro?._id}`}
                         onClick={() => {
                           sessionStorage.setItem(
                             "productPageId",

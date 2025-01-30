@@ -87,7 +87,7 @@ export default function Featured2({
               key={index}
             >
               <Link
-                to={`/product/${pro?.title?.replace(/\//g, "").replace(/\s+/g, "-")}`}
+                to={`/product/${pro?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${pro?._id}`}
                 onClick={() => {
                   sessionStorage.setItem("productPageId", JSON.stringify(pro?._id));
                   setProductPageId(pro?._id);

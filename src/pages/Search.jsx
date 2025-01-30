@@ -163,8 +163,8 @@ const SearchPage = ({}) => {
                     <Link
                       to={`/product/${item?.title
                         ?.replace(/\//g, "")
-                        .replace(/\s+/g, "-")}`}
-                      onClick={() => {
+                        .replace(/\s+/g, "-")}?productId=${item?._id}`}
+                        onClick={() => {
                         sessionStorage.setItem(
                           "productPageId",
                           JSON.stringify(item?._id)
@@ -187,8 +187,8 @@ const SearchPage = ({}) => {
                       <Link
                         to={`/product/${item?.title
                           ?.replace(/\//g, "")
-                          .replace(/\s+/g, "-")}`}
-                        onClick={() => {
+                          .replace(/\s+/g, "-")}?productId=${item?._id}`}
+                          onClick={() => {
                           sessionStorage.setItem(
                             "productPageId",
                             JSON.stringify(item?._id)
@@ -238,8 +238,8 @@ const SearchPage = ({}) => {
                       <Link
                         to={`/product/${item?.title
                           ?.replace(/\//g, "")
-                          .replace(/\s+/g, "-")}`}
-                        onClick={() => {
+                          .replace(/\s+/g, "-")}?productId=${item?._id}`}
+                          onClick={() => {
                           sessionStorage.setItem(
                             "productPageId",
                             JSON.stringify(item?._id)

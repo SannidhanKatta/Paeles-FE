@@ -281,7 +281,9 @@ const Home = () => {
               .slice(0, 10)
               .map((pro, index) => (
                 <div key={index} className="relative flex flex-col items-center">
-                  <Link to={`/product/${pro?._id}`} className="flex items-center">
+                  <Link
+                    to={`/product/${pro?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${pro?._id}`}
+                    className="flex items-center">
                     <img
                       className="h-[220px] w-full lg:h-[250px] xl:h-[310px]"
                       src={pro.mainImage}
@@ -296,7 +298,9 @@ const Home = () => {
               ))
             : filteredProducts.slice(0, 10).map((pro, index) => (
               <div key={index} className="relative flex flex-col items-center">
-                <Link to={`/product/${pro?._id}`} className="flex items-center">
+                <Link 
+                to={`/product/${pro?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${pro?._id}`}
+                className="flex items-center">
                   <img
                     className="h-[220px] w-full lg:h-[250px] xl:h-[310px]"
                     src={pro.mainImage}

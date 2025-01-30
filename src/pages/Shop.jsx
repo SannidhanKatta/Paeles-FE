@@ -420,7 +420,7 @@ const Shop = () => {
                                 />
                               )}
                               <Link
-                                to={`/product/${item?.title.replace(/\s+/g, "-")}`}
+                                to={`/product/${item?.title.replace(/\s+/g, "-")}?productId=${item?._id}`}
                                 onClick={() => {
                                   sessionStorage.setItem(
                                     "productPageId",

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-
+import { Link, useNavigate, useParams ,useLocation} from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import {
@@ -66,6 +65,10 @@ const ProductPage = ({ }) => {
   const [sizes, setSizes] = useState([]);
   const [selectedSize, setSelectedSize] = useState(null);
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const queryproductId = queryParams.get("productId"); // Extract productId from URL
+
   useEffect(() => {
     console.log(selectedSize)
   }, [selectedSize]);
@@ -92,7 +95,7 @@ const ProductPage = ({ }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/product/${productPageId || productId
+        `${import.meta.env.VITE_SERVER_URL}/product/${queryproductId
         }`
       );
       // if (response.data?.approved === false) {
@@ -865,8 +868,8 @@ const ProductPage = ({ }) => {
                               <Link
                                 to={`/product/${item?.title
                                   ?.replace(/\//g, "")
-                                  .replace(/\s+/g, "-")}`}
-                                onClick={() => {
+                                  .replace(/\s+/g, "-")}?productId=${item?._id}`}
+                                  onClick={() => {
                                   localStorage.setItem(
                                     "productPageId",
                                     item?._id
@@ -1069,7 +1072,7 @@ const ProductPage = ({ }) => {
                             <Link
                               to={`/product/${item?.title
                                 ?.replace(/\//g, "")
-                                .replace(/\s+/g, "-")}`}
+                                .replace(/\s+/g, "-")}?productId=${item?._id}`}
                               onClick={() => {
                                 localStorage.setItem(
                                   "productPageId",

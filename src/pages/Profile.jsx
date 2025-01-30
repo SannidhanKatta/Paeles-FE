@@ -160,6 +160,9 @@ const Orders = ({ userData }) => {
             <div key={orderIndex}>
               {order?.products?.map((product, productIndex) => {
                 console.log("product",product);
+                if(product.product == null){
+                  return;
+                }
                 return (
                   <div
                     className="flex flex-col md:flex-row md:justify-between w-full dark:bg-white/40 bg-gray-100 p-2 border-b border-gray-300"
@@ -178,16 +181,16 @@ const Orders = ({ userData }) => {
                       )}
                       <Link
                         className="flex items-center"
-                        to={`/product/${product.product.title?.replace(/\//g, "").replace(/\s+/g, "-")}`}
+                        to={`/product/${product?.product?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${product?.product?._id}`}
                       >
                         <img
                           className="h-[100px] mr-4 w-[100px] object-cover"
-                          src={product.product.mainImage}
+                          src={product?.product?.mainImage}
                           alt="product-img"
                         />
                         <div className="flex flex-col">
                           <p className="text-[#000] flex flex-col lg:flex-row text-[15px] md:text-[16.5px] 2xl:text-[18px] font-bold plus-jakarta">
-                            {product.product.title}
+                            {product?.product?.title}
                             <span className=" lg:ml-2 text-xs sm:text-sm font-semibold bg-green-200 text-green-800 text-center py-1 w-fit px-3 ">
                               <p>{order.status}</p>
                             </span>
@@ -197,7 +200,7 @@ const Orders = ({ userData }) => {
                               <span className="text-xs sm:text-sm font-medium">
                                 Quantity:
                               </span>{" "}
-                              <b>{product.quantity}</b>
+                              <b>{product?.quantity}</b>
                             </p>
                             {/* <p className="text-[#000] text-[15px] md:text-[14px] 2xl:text-[14px] capitalize">
                       <span className="text-xs sm:text-sm font-medium capitalize">Color:</span> {product.color}
@@ -210,10 +213,10 @@ const Orders = ({ userData }) => {
                             <span className="text-xs sm:text-sm font-medium">
                               Total:
                             </span>
-                            {product.quantity} x {currency}
+                            {product?.quantity} x {currency}
                             {currency === "OMR"
-                              ? (product.product.price * 1 * 0.1).toFixed(2)
-                              : product.product.price * 1}
+                              ? (product?.product?.price * 1 * 0.1).toFixed(2)
+                              : product?.product?.price * 1}
                           </p>
                         </div>
                       </Link>

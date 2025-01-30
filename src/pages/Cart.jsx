@@ -449,7 +449,7 @@ const Cart = () => {
                         <td className="flex items-center mt-1 justify-center">
                           <Link
                             key={`image-${index}`}
-                            to={`/product/${item?.title}`}
+                            to={`/product/${item.productId?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item.productId?._id}`}
                             onClick={() => {
                               sessionStorage.setItem(
                                 "productPageId",
@@ -467,10 +467,13 @@ const Cart = () => {
                         </td>
 
                         {/* Product Name */}
+                        {
+                          console.log(item)
+                        }
                         <td className="text-center max-w-[100px]">
                           <Link
                             key={`title-${index}`}
-                            to={`/product/${item?.title}`}
+                            to={`/product/${item.productId?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item.productId?._id}`}
                             onClick={() => {
                               sessionStorage.setItem(
                                 "productPageId",
