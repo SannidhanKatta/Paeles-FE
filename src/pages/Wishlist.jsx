@@ -103,7 +103,7 @@ const WishList = () => {
                         <td className="flex items-center mt-1 justify-center">
                           <Link
                             key={index}
-                            to={`/product/${item?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item?._id}`}
+                            to={`/product/${item?.productId?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item?.productId?._id}`}
                             onClick={() => {
                               setProductPageId(item?.productId?._id);
                             }}
@@ -118,7 +118,7 @@ const WishList = () => {
                         <td className="text-center">
                           <Link
                             key={index}
-                            to={`/product/${item?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item?._id}`}
+                            to={`/product/${item?.productId?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${item?.productId?._id}`}
                             onClick={() => {
                               sessionStorage.setItem(
                                 "productPageId",
