@@ -426,11 +426,11 @@ export function Home() {
               <tbody className="">
                 {console.log("orders", orders)}
                 {orders?.slice(0, 10)?.map((item, index) => {
-                  console.log("djdjdjd", item.customer.email);
+                  console.log("djdjdjd", item.customer?.email);
                   return (
                     <tr key={index} className="">
                       <td className="text-center py-2 px-4 text-[13px] md:text-[15px] 2xl:text-[16px] my-2  text-[#FF7004] font-[600] plus-jakarta">
-                        {item.customer.email}
+                        {item.customer?.email}
                       </td>
                       <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                         INR {item.totalAmount}
