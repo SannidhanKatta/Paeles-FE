@@ -69,7 +69,7 @@ const Checkout = () => {
     const userDetailsUpdated = {
       ...userDetails,
       customerId: customerId,
-      phone: phoneCode1 + phone,
+      phone: phone,
     };
 
     // Format the products array correctly based on the flow
