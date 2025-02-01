@@ -5,6 +5,7 @@ import {
   InformationCircleIcon,
   ServerStackIcon,
   RectangleStackIcon,
+  Bars3Icon,
 } from "@heroicons/react/24/solid";
 import { Home } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
@@ -38,10 +39,48 @@ import PopupAdmin from "./pages/dashboard/Popup";
 import Transactions from "./pages/dashboard/Transaction";
 import { AiFillStar } from "react-icons/ai";
 import TestimonialPage from "./pages/dashboard/Testimonial";
+import { Link } from "react-router-dom";
 // import PrivacyPolicy from "./pages/dashboard/PrivacyPolicy";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
+};
+
+// Add a new component for mobile menu button and navigation
+export const MobileNavigation = ({ isOpen, onClose }) => {
+  return (
+    <div className={`
+      fixed top-0 left-0 w-64 h-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50
+      ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+      md:hidden
+    `}>
+      <div className="p-4">
+        {routes[0].pages.map((route, index) => (
+          <Link
+            key={index}
+            to={`/admindashboard${route.path}`}
+            onClick={onClose}
+            className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-md"
+          >
+            <span className="text-gray-600">{route.icon}</span>
+            <span className="text-gray-800">{route.name}</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Add mobile menu button
+export const MobileMenuButton = ({ onClick, isOpen }) => {
+  return (
+    <button
+      onClick={onClick}
+      className="fixed top-4 right-4 z-50 p-2 rounded-md md:hidden bg-white shadow-md"
+    >
+      <Bars3Icon className="h-6 w-6" />
+    </button>
+  );
 };
 
 export const routes = [

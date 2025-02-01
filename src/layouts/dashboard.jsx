@@ -13,12 +13,15 @@ import {
   setOpenSidenav,
   setOpenConfigurator,
 } from "@/context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { MobileMenuButton, MobileNavigation } from '../routes';
 
 export function AdminDashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar, openSidenav } = controller;
   const { sidenavType } = controller;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   useEffect(() => {
     const screenWidth = window.innerWidth;
     if (screenWidth >= 1140) {
@@ -46,6 +49,15 @@ export function AdminDashboard() {
         >
           <Cog6ToothIcon className="h-5 w-5" />
         </IconButton> */}
+        <MobileMenuButton 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+          isOpen={isMobileMenuOpen}
+        />
+        
+        <MobileNavigation 
+          isOpen={isMobileMenuOpen} 
+          onClose={() => setIsMobileMenuOpen(false)}
+        />
         <Routes>
           {routes.map(
             ({ layout, pages }) =>

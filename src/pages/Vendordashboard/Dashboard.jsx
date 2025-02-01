@@ -397,17 +397,16 @@ const Dashboard = () => {
                         </td>
                         <td>
                           <p
-                            className={`text-center ${
-                              item.status.toLowerCase() === "pending"
-                                ? "bg-orange-200 text-orange-600"
-                                : item.status.toLowerCase() === "returned"
+                            className={`text-center ${item.status.toLowerCase() === "pending"
+                              ? "bg-orange-200 text-orange-600"
+                              : item.status.toLowerCase() === "returned"
                                 ? "bg-red-200 text-red-700"
                                 : item.status.toLowerCase() === "received"
-                                ? "bg-green-200 text-green-700"
-                                : "bg-blue-200 text-blue-600"
-                            }
+                                  ? "bg-green-200 text-green-700"
+                                  : "bg-blue-200 text-blue-600"
+                              }
                           rounded-md py-1 w-full outline-none text-sm font-semibold`}
-                            onChange={(e) => {}}
+                            onChange={(e) => { }}
                           >
                             {item?.status}
                           </p>

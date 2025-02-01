@@ -147,11 +147,10 @@ const DashboardHeader = () => {
                     }}
                     key={index}
                     to={tab.link}
-                    className={`flex w-max min-w-full items-center gap-2 ${
-                      activeTab === tab.id
+                    className={`flex w-max min-w-full items-center gap-2 ${activeTab === tab.id
                         ? " text-white bg-orange-400"
                         : "text-[#7A7A7A]"
-                    }  cursor-pointer hover:bg-gray-100 hover:text-black font-[600] plus-jakarta p-3 px-10 text-[13px] md:text-[16px] 2xl:text-[16.5px] focus:outline-none `}
+                      }  cursor-pointer hover:bg-gray-100 hover:text-black font-[600] plus-jakarta p-3 px-10 text-[13px] md:text-[16px] 2xl:text-[16.5px] focus:outline-none `}
                   >
                     {tab.icon}
                     {tab.name}

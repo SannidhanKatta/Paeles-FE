@@ -254,35 +254,19 @@ const Orders = () => {
                             handleStatusChange(item._id, e.target.value)
                           }
                         >
-                          <option
-                            className=" bg-white text-black"
-                            value="orderReceived"
-                          >
+                          <option className="bg-white text-black" value="orderReceived">
                             Order Received
                           </option>
-                          <option
-                            className=" bg-white text-black"
-                            value="inProgress"
-                            selected="selected"
-                          >
+                          <option className="bg-white text-black" value="inProgress">
                             In Progress
                           </option>
-                          <option
-                            className=" bg-white text-black"
-                            value="qualityCheck"
-                          >
+                          <option className="bg-white text-black" value="qualityCheck">
                             Quality Check
                           </option>
-                          <option
-                            className=" bg-white text-black"
-                            value="outForDelivery"
-                          >
+                          <option className="bg-white text-black" value="outForDelivery">
                             Out For Delivery
                           </option>
-                          <option
-                            className=" bg-white text-black"
-                            value="orderDelivered"
-                          >
+                          <option className="bg-white text-black" value="orderDelivered">
                             Order Delivered
                           </option>
                         </select>

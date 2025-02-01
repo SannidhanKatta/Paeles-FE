@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams ,useLocation} from "react-router-dom";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import {
@@ -585,13 +585,27 @@ const ProductPage = ({ }) => {
                   </div>
                 </div>
 
-                <div className=" flex flex-col lg:w-[100%] col-span-4 xl:w-[100%] ">
-                  <h4 className=" dark:text-gray-400 capitalize text-[30px] md:text-[30px] 2xl:text-[30px] font-[600] raleway text-[#1d1d1d] ">
+                <div className="flex flex-col lg:w-[100%] col-span-4 xl:w-[100%] ">
+                  <h4 className="dark:text-gray-400 capitalize text-[30px] md:text-[30px] 2xl:text-[30px] font-[600] raleway text-[#1d1d1d] ">
                     {product?.title}
                   </h4>
-                  <p className=" pt-[20px] text-[1.5rem] md:text-[1.7rem] 2xl:text-[1.9rem] font-semibold raleway text-[#1d1d1d]">
-                    Tax Included
+                  <p className="pt-[20px] text-[1.5rem] md:text-[1.7rem] 2xl:text-[1.9rem] font-semibold raleway text-[#1d1d1d]">
+                    {product?.discountValue > 0 ? (
+                      <>
+                        <span className="line-through text-gray-400">
+                          {currency} {currency === "OMR" ? (product.price * 0.1).toFixed(2) : product.price}
+                        </span>
+                        <span className="text-black">
+                          {currency} {currency === "OMR" ? (product.discountValue * 0.1).toFixed(2) : product.discountValue}
+                        </span>
+                      </>
+                    ) : (
+                      <span>
+                        {currency} {currency === "OMR" ? (product.price * 0.1).toFixed(2) : product.price}
+                      </span>
+                    )}
                   </p>
+                  <p className="text-sm text-gray-500">Tax Included</p>
 
                   {/* Sizes and Stock Display */}
                   <div className="flex flex-wrap gap-2 mt-2">
@@ -869,7 +883,7 @@ const ProductPage = ({ }) => {
                                 to={`/product/${item?.title
                                   ?.replace(/\//g, "")
                                   .replace(/\s+/g, "-")}?productId=${item?._id}`}
-                                  onClick={() => {
+                                onClick={() => {
                                   localStorage.setItem(
                                     "productPageId",
                                     item?._id

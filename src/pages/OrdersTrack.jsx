@@ -33,23 +33,23 @@ const ordersTrack = ({ order, status, deliveryDate, createdAt }) => {
   const marks = [
     {
       value: 0,
-      label: "Order received",
+      label: "Order Received",
     },
     {
       value: 25,
-      label: "Inprogress",
+      label: "In Progress",
     },
     {
       value: 50,
-      label: "Quality check",
+      label: "Quality Check",
     },
     {
       value: 75,
-      label: "Out for delivery",
+      label: "Out For Delivery",
     },
     {
       value: 100,
-      label: "Order delivered",
+      label: "Order Delivered",
     },
   ];
 

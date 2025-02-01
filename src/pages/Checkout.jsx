@@ -268,6 +268,21 @@ const Checkout = () => {
   // Add this check for user login status
   const isUserLoggedIn = localStorage.getItem("user") ? true : false;
 
+  // Validation function to check if all required fields are filled
+  const isFormValid = () => {
+    return (
+      firstName &&
+      lastName &&
+      email &&
+      phone &&
+      addressLine1 &&
+      country &&
+      city &&
+      state &&
+      zipCode
+    );
+  };
+
   return (
     <div className=" w-full">
       <div className=" px-[4%] md:px-[8%] py-3.5 md:py-7 bg-[#F4F5F7]    dark:bg-black dark:text-gray-400 dark:border-b dark:border-t dark:border-gray-600 flex items-center justify-between ">
@@ -630,7 +645,7 @@ const Checkout = () => {
               <button
                 className=" bg-[#363F4D] disabled:bg-gray-400 disabled:border-gray-400  border-[1.4px] border-[#363F4D] px-4 py-2.5 font-medium uppercase text-[13px] text-white mt-6 "
                 onClick={handlePhonePeCheckout}
-                disabled={loading}
+                disabled={loading || !isFormValid()}
               >
                 Place order
               </button>

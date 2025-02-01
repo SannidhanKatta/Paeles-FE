@@ -426,7 +426,21 @@ export function Home() {
               <tbody className="">
                 {console.log("orders", orders)}
                 {orders?.slice(0, 10)?.map((item, index) => {
-                  console.log("djdjdjd", item.customer?.email);
+                  // Helper function to format status text
+                  const formatStatus = (status) => {
+                    const statusMap = {
+                      'orderDelivered': 'Order Delivered',
+                      'orderReceived': 'Order Received',
+                      'inProgress': 'In Progress',
+                      'qualityCheck': 'Quality Check',
+                      'outForDelivery': 'Out For Delivery',
+                      'pending': 'Pending',
+                      'returned': 'Returned',
+                      'received': 'Received'
+                    };
+                    return statusMap[status] || status;
+                  };
+
                   return (
                     <tr key={index} className="">
                       <td className="text-center py-2 px-4 text-[13px] md:text-[15px] 2xl:text-[16px] my-2  text-[#FF7004] font-[600] plus-jakarta">
@@ -438,17 +452,15 @@ export function Home() {
                       <td>
                         <p
                           className={`text-center ${item.status.toLowerCase() === "pending"
-                            ? "bg-orange-200 text-orange-600"
-                            : item.status.toLowerCase() === "returned"
-                              ? "bg-red-200 text-red-700"
-                              : item.status.toLowerCase() === "received"
-                                ? "bg-green-200 text-green-700"
-                                : "bg-blue-200 text-blue-600"
-                            }
-                          rounded-md py-1 w-full outline-none text-sm font-semibold`}
-                          onChange={(e) => { }}
+                              ? "bg-orange-200 text-orange-600"
+                              : item.status.toLowerCase() === "returned"
+                                ? "bg-red-200 text-red-700"
+                                : item.status.toLowerCase() === "received"
+                                  ? "bg-green-200 text-green-700"
+                                  : "bg-blue-200 text-blue-600"
+                            } rounded-md py-1 w-full outline-none text-sm font-semibold`}
                         >
-                          {item?.status}
+                          {formatStatus(item?.status)}
                         </p>
                       </td>
                       <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
