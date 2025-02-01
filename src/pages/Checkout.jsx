@@ -270,11 +270,14 @@ const Checkout = () => {
 
   // Validation function to check if all required fields are filled
   const isFormValid = () => {
+    // Check if phone number is exactly 10 digits
+    const phoneNumberValid = phone && phone.toString().length === 10;
+
     return (
       firstName &&
       lastName &&
       email &&
-      phone &&
+      phoneNumberValid && // Updated condition
       addressLine1 &&
       country &&
       city &&
@@ -430,6 +433,9 @@ const Checkout = () => {
                     placeholder="Phone No."
                   />
                 </div>
+                {phone && phone.toString().length !== 10 && (
+                  <p className="text-red-500 text-xs mt-1">Phone number must be 10 digits</p>
+                )}
               </div>
             </div>
 
