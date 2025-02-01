@@ -138,7 +138,7 @@ const Orders = ({ userData }) => {
         );
 
         // Update the orders state with the fetched orders
-        console.log("orders",response.data.orders);
+        console.log("orders", response.data.orders);
         setOrders(response.data.orders);
         setLoading(false);
       } catch (error) {
@@ -150,6 +150,21 @@ const Orders = ({ userData }) => {
     fetchOrders();
   }, [setOrders, userData?._id]);
 
+  // Add this helper function
+  const formatStatus = (status) => {
+    const statusMap = {
+      'orderDelivered': 'Order Delivered',
+      'orderReceived': 'Order Received',
+      'inProgress': 'In Progress',
+      'qualityCheck': 'Quality Check',
+      'outForDelivery': 'Out For Delivery',
+      'pending': 'Pending',
+      'returned': 'Returned',
+      'received': 'Received'
+    };
+    return statusMap[status] || status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
   return (
     <div>
       {!orders?.length > 0 ? (
@@ -159,8 +174,8 @@ const Orders = ({ userData }) => {
           {orders?.map((order, orderIndex) => (
             <div key={orderIndex}>
               {order?.products?.map((product, productIndex) => {
-                console.log("product",product);
-                if(product.product == null){
+                console.log("product", product);
+                if (product.product == null) {
                   return;
                 }
                 return (
@@ -169,7 +184,7 @@ const Orders = ({ userData }) => {
                     key={productIndex}
                   >
                     <div className="flex items-center">
-                      {}
+                      { }
                       {isRatingFormOpen && <RatingForm2 order={product} />}
                       {isOrdersTrackForm && (
                         <OrdersTrack
@@ -192,7 +207,7 @@ const Orders = ({ userData }) => {
                           <p className="text-[#000] flex flex-col lg:flex-row text-[15px] md:text-[16.5px] 2xl:text-[18px] font-bold plus-jakarta">
                             {product?.product?.title}
                             <span className=" lg:ml-2 text-xs sm:text-sm font-semibold bg-green-200 text-green-800 text-center py-1 w-fit px-3 ">
-                              <p>{order.status}</p>
+                              <p>{formatStatus(order.status)}</p>
                             </span>
                           </p>
                           <div className="flex items-center gap-2">
@@ -221,12 +236,12 @@ const Orders = ({ userData }) => {
                         </div>
                       </Link>
                     </div>
-                    <div className=" pt-2 md:p-4 flex flex-col gap-2 items-center justify-center">
+                    <div className="pt-2 md:p-4 flex flex-col gap-2 items-center justify-center">
                       <button
                         onClick={() => {
                           setIsOrdersTrackForm(true);
                         }}
-                        className="bg-green-500 w-full md:w-fit hover:bg-green-600 text-white text-sm font-semibold py-2 px-4"
+                        className="px-6 py-2 rounded-md bg-[#FF7004] text-white font-semibold transition duration-200 hover:bg-white hover:text-[#FF7004] border-2 border-transparent hover:border-[#FF7004] w-full md:w-fit"
                       >
                         Track Order
                       </button>
@@ -235,7 +250,7 @@ const Orders = ({ userData }) => {
                           onClick={() => {
                             setIsRatingFormOpen(true);
                           }}
-                          className="bg-green-500 w-full md:w-fit hover:bg-green-600 text-white text-sm font-semibold py-2 px-4"
+                          className="px-6 py-2 rounded-md bg-[#363F4D] text-white font-semibold transition duration-200 hover:bg-white hover:text-[#363F4D] border-2 border-transparent hover:border-[#363F4D] w-full md:w-fit"
                         >
                           Rate Product
                         </button>
@@ -359,9 +374,8 @@ const Profile = () => {
       <section className=" px-[4%] xl:px-[8%] mt-4 md:mt-10 mb-10 ">
         <div className=" relative w-full flex gap-3">
           <div
-            className={`${
-              isMobileMenu ? "block absolute bg-white " : " hidden lg:block"
-            } lg:w-[22%] border border-gray-300`}
+            className={`${isMobileMenu ? "block absolute bg-white " : " hidden lg:block"
+              } lg:w-[22%] border border-gray-300`}
           >
             {ProfileTabs.map((tab, index) => {
               return (
@@ -374,11 +388,10 @@ const Profile = () => {
                     }
                     setIsMobileMenu(false);
                   }}
-                  className={`flex items-center gap-2 ${
-                    tab.id === activeTab.id
-                      ? "bg-[#FF7004] text-white"
-                      : "text-[#7A7A7A] cursor-pointer hover:bg-gray-100 "
-                  }  font-[600] plus-jakarta p-3 px-5 text-[13px] md:text-[15.5px] 2xl:text-[16.5px] `}
+                  className={`flex items-center gap-2 ${tab.id === activeTab.id
+                    ? "bg-[#FF7004] text-white"
+                    : "text-[#7A7A7A] cursor-pointer hover:bg-gray-100 "
+                    }  font-[600] plus-jakarta p-3 px-5 text-[13px] md:text-[15.5px] 2xl:text-[16.5px] `}
                 >
                   {tab.icon}
                   {tab.name}
