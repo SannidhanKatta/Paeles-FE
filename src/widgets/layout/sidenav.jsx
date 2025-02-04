@@ -28,19 +28,11 @@ export function Sidenav({ brandImg, brandName, routes }) {
   const location = useLocation();
   const pathSegments = location.pathname.split("/");
   const path = pathSegments[pathSegments.length - 1];
-  const screenWidth = window.innerWidth;
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // console.log(path);
-    // if (path === "" || null || undefined) {
-    //   setActiveNav("home");
-    // }
     setActiveNav(path);
-    if (screenWidth >= 1140) {
-      return setOpenSidenav(dispatch, true);
-    }
-  }, []);
+  }, [path]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -52,14 +44,17 @@ export function Sidenav({ brandImg, brandName, routes }) {
   return (
     <>
       <MobileMenuButton
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          setOpenSidenav(dispatch, !isOpen);
+        }}
         isOpen={isOpen}
       />
 
       <aside
         onClick={() => {
-          if (screenWidth < 1140) {
-            return setOpenSidenav(dispatch, false);
+          if (window.innerWidth < 1140) {
+            setOpenSidenav(dispatch, false);
           }
         }}
         className={`
@@ -115,8 +110,8 @@ export function Sidenav({ brandImg, brandName, routes }) {
                         <Button
                           onClick={() => {
                             setActiveNav(name);
-                            if (screenWidth < 1140) {
-                              return setOpenSidenav(dispatch, false);
+                            if (window.innerWidth < 1140) {
+                              setOpenSidenav(dispatch, false);
                             }
                           }}
                           variant={
@@ -179,6 +174,6 @@ Sidenav.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-Sidenav.displayName = "/src/widgets/layout/sidnave.jsx";
+Sidenav.displayName = "/src/widgets/layout/sidenav.jsx";
 
 export default Sidenav;
