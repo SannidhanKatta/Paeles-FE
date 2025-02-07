@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route,useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 // import Newsletter from "./components/Newsletter";
@@ -37,13 +37,40 @@ const App = () => {
   axios.defaults.baseURL = import.meta.env.VITE_SERVER_URL;
   const { isDarkMode } = useContext(MainAppContext);
   const [loading, setLoading] = useState(false);
+  const location = useLocation(); // Detects route changes
+
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
     }, 500);
   }, []);
+  const isAdmin = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return false; // No token, not an admin
+  
+    try { 
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/checkadmin`,
+        { accessToken } 
+      );
+      console.log(response.data.isAdmin)
+      return response.data.isAdmin; // Returns true if admin, false otherwise
+    } catch (error) {
+      console.error("Admin check failed:", error);
+      return false;
+    }
+  };
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const result = await isAdmin();
+      setIsAdminUser(result);
+    };
+    checkAdminStatus();
+  }, [location.pathname]);
+  
   return (
     <AppProvider>
       <Header />
@@ -68,7 +95,8 @@ const App = () => {
           );
         })}
         <Route path="/spin" element={<Smv />} />
-        <Route path="/admindashboard/*" element={<AdminDashboard />} />
+        {isAdminUser &&  <Route path="/admindashboard/*" element={<AdminDashboard />} />}
+
         <Route path="/shipping-policy" element={<ShippingPolicy />} />
         <Route path="/exchange-policy" element={<ExchangePolicy />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />

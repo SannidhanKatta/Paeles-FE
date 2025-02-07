@@ -237,7 +237,13 @@ const Products = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/admin/markFeatured`,
-        { productId: product._id, featured: !product.featured }
+        { productId: product._id, featured: !product.featured },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
+
       );
       toast.success(response.data.message);
       getAllProducts();
@@ -254,7 +260,13 @@ const Products = () => {
         {
           productId: item._id,
           isStock: !item.isStock,
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
         }
+
       );
       // console.log(response.data);
       toast.success(response.data.message);
@@ -290,7 +302,13 @@ const Products = () => {
   const handleDeleteProduct = async (productId) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}/product/delete/${productId}`
+        `${import.meta.env.VITE_SERVER_URL}/product/delete/${productId}`,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
+
       );
       if (response.status === 200) {
         toast.success("Product deleted successfully");
@@ -450,7 +468,7 @@ const Products = () => {
                         <th className="py-2 px-4">Name</th>
                         <th className="py-2 px-4">Price</th>
                         <th className="py-2 px-4">Status</th>
-                        <th className="py-2 px-4">Featured </th>
+                        {/* <th className="py-2 px-4">Featured </th> */}
                         <th className="py-2 px-4">Stock </th>
                         <th className="py-2 px-4">Action</th>
                         <th className="py-2 px-4">Edit</th>
@@ -492,7 +510,7 @@ const Products = () => {
                               <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                                 {item?.status}
                               </td>
-                              <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
+                              {/* <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                                 <div className=" flex items-center justify-center">
                                   {item?.featured ? (
                                     <RiStarFill
@@ -510,7 +528,7 @@ const Products = () => {
                                     />
                                   )}
                                 </div>
-                              </td>
+                              </td> */}
                               <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                                 <input
                                   type="checkbox"

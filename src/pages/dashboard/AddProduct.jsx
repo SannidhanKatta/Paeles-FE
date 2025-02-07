@@ -251,6 +251,9 @@ const AddProduct = () => {
     fetch(`${import.meta.env.VITE_SERVER_URL}/product/create`, {
       method: "POST",
       body: formData,
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+      },
     })
       .then((response) => response.json())
       .then((data) => {
@@ -305,7 +308,12 @@ const AddProduct = () => {
   const getCategoriesData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/admin/category`
+        `${import.meta.env.VITE_SERVER_URL}/admin/category`,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          }
+        }
       );
       console.log(response.data.categories);
       setCategories(response.data.categories);
@@ -321,6 +329,7 @@ const AddProduct = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
           },
         }
       );
@@ -421,7 +430,12 @@ const AddProduct = () => {
   const getAllCategories = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/admin/category`
+        `${import.meta.env.VITE_SERVER_URL}/admin/category`,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          }
+        }
       );
       setCategories(response.data?.categories);
     } catch (error) {

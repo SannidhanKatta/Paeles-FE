@@ -31,7 +31,13 @@ const Coupon = () => {
   const fetchCoupons = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_SERVER_URL}/admin/coupons`
+        `${import.meta.env.VITE_SERVER_URL}/admin/coupons`,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
+
       );
       if (!response.ok) {
         throw new Error("Failed to fetch coupons");
@@ -69,7 +75,12 @@ const Coupon = () => {
 
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/admin/createCoupon`,
-        couponData
+        couponData,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
       );
 
       toast.success("Coupon created successfully");
@@ -92,7 +103,13 @@ const Coupon = () => {
   const handleDeleteCoupon = async (id) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}/admin/coupons/${id}`
+        `${import.meta.env.VITE_SERVER_URL}/admin/coupons/${id}`,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
+
       );
       if (response.status === 200) {
         toast.success("Coupon deleted successfully");

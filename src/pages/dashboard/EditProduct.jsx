@@ -113,7 +113,12 @@ const EditProduct = ({ product, setIsEditProduct }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/product/${product?._id}`
+          `${import.meta.env.VITE_SERVER_URL}/product/${product?._id}`,
+          {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            },
+          }
         );
         console.log(response.data);
         setLoading(false);
@@ -128,7 +133,13 @@ const EditProduct = ({ product, setIsEditProduct }) => {
     const getCategoriesData = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/admin/category`
+          `${import.meta.env.VITE_SERVER_URL}/admin/category`,
+          {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            },
+          }
+
         );
         console.log(response.data.categories);
         setCategories(response.data.categories);
@@ -144,6 +155,7 @@ const EditProduct = ({ product, setIsEditProduct }) => {
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
             },
           }
         );
@@ -268,6 +280,9 @@ const EditProduct = ({ product, setIsEditProduct }) => {
     fetch(`${import.meta.env.VITE_SERVER_URL}/product/edit/${productId}`, {
       method: "PUT",
       body: formData,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+      }
     })
       .then((response) => response.json())
       .then((data) => {

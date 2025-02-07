@@ -43,6 +43,9 @@ const Login = () => {
       // console.log(res.data);
       if (res.data.user) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("accessToken",res.data.accessToken)
+        localStorage.setItem("refreshToken",res.data.refreshToken)
+
         setUserLoggedIn(true);
         // setUserData(res.data.user);
         toast.success(res.data.message);
@@ -64,10 +67,6 @@ const Login = () => {
       `${import.meta.env.VITE_SERVER_URL}/auth/google/callback`,
       "_self"
     );
-  };
-
-  const loginWithFacebook = () => {
-    window.open(`${import.meta.env.VITE_SERVER_URL}/auth/facebook`, "_self");
   };
 
   useEffect(() => {

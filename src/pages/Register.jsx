@@ -7,6 +7,7 @@ import {
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import OtpInput from "react-otp-input";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,6 +18,10 @@ const Register = () => {
   const [isPswd1Visible, setIsPswd1Visible] = useState(false);
   const [isPswd2Visible, setIsPswd2Visible] = useState(false);
   const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [timer, setTimer] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,7 +29,7 @@ const Register = () => {
 
   const registerUser = async () => {
     const name = firstName + " " + lastName;
-    const userData = { name, email, password };
+    const userData = { name, email, password, otp };
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/auth/local/register`,
@@ -36,7 +41,7 @@ const Register = () => {
       }
     } catch (error) {
       console.error("Error registering user:", error);
-      toast.error("Error registering user");
+      toast.error(error.response?.data?.message || "Error registering user");
     }
   };
 
@@ -50,6 +55,47 @@ const Register = () => {
   const registerWithFacebook = () => {
     window.open(`${import.meta.env.VITE_SERVER_URL}/auth/facebook`, "_self");
   };
+
+  const handleSendOtp = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/auth/sendOtp`,
+        { email }
+      );
+      toast.success(response.data?.message); // Show response message
+      setIsOtpSent(true);
+      setTimer(120); // Start 120-sec countdown
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to send OTP");
+    }
+  };
+  useEffect(() => {
+    if (timer > 0) {
+      const countdown = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(countdown);
+    } else {
+      setIsOtpSent(false); // Show verify button again after 120 seconds
+    }
+  }, [timer]);
+
+
+  // Function to verify OTP
+  const handleVerifyOtp = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/order/verifyOtp`,
+        { email, otp }
+      );
+      alert(response.data); // Show verification message
+      setIsVerified(true);
+    } catch (error) {
+      alert(error.response?.data || "OTP verification failed");
+    }
+  };
+
 
   return (
     <div className=" w-full h-full flex items-center justify-center ">
@@ -103,17 +149,61 @@ const Register = () => {
               >
                 Email Address*
               </label>
-              <input
-                autoComplete="off"
-                name="email"
-                id="email"
-                type="email"
-                className=" w-[100%] border-[1.4px] border-[#999999] p-2 text-[#7A7A7A]  dark:text-gray-400 bg-transparent text-[14.4px]"
-                placeholder="Your Email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <div className="flex flex-col sm:flex-row items-center gap-2 w-full">
+                <input
+                  autoComplete="off"
+                  name="email"
+                  id="email"
+                  type="email"
+                  className="w-2/3 border border-gray-400 p-2 rounded-md text-gray-700 dark:text-gray-300 bg-transparent text-sm"
+                  placeholder="Your Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isOtpSent}
+                />
+                {isOtpSent ? (
+                  <span className="text-red-500 font-semibold text-sm">{timer}s</span>
+                ) : (
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600 transition duration-300 disabled:bg-gray-400"
+                    onClick={handleSendOtp}
+                    disabled={!email}
+                  >
+                    Send OTP
+                  </button>
+                )}
+              </div>
             </div>
           </div>
+          {isOtpSent && !isVerified && (
+            <div className="mt-2">
+              <label
+                className="text-[#7A7A7A] dark:text-gray-400 font-[700] plus-jakarta text-[12px] md:text-[13px] 2xl:text-[14.4px] mb-1"
+                htmlFor="otp"
+              >
+                Enter OTP*
+              </label>
+              <OtpInput
+                value={otp}
+                onChange={setOtp}
+                numInputs={6}
+                containerStyle={{
+                  color: "black",
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                }}
+                inputStyle={{
+                  width: "45px",
+                  height: "45px",
+                  border: "1px solid #000",
+                }}
+                shouldAutoFocus={true}
+                renderSeparator={<span className="  "> </span>}
+                renderInput={(props) => <input {...props} />}
+              />
+            </div>
+          )}
+
+
           <div className=" flex flex-col sm:grid grid-cols-2 sm:gap-10 md:mt-2 ">
             <div className=" flex-col flex">
               <label

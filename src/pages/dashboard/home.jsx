@@ -274,11 +274,6 @@ export function Home() {
       // setUsers(response.data);
       // setUsers(response?.data?.);
       setTotalUsers(response?.data?.length);
-      setTotalVendors(
-        response?.data?.filter((i) => {
-          return i?.role === "vendor";
-        })?.length
-      );
       // // console.log("users", response?.data);
       // Calculate the number of users registered per month
       const userCountByMonthArray = calculateUserCountByMonth(response?.data);
@@ -310,7 +305,13 @@ export function Home() {
   const getAllOrders = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/order`
+        `${import.meta.env.VITE_SERVER_URL}/order`,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
+
       );
       setOrders(response.data.orders);
       setTotalOrders(response?.data?.orders?.length);

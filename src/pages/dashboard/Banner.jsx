@@ -68,6 +68,7 @@ const Banner = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
           },
         }
       );
@@ -147,6 +148,7 @@ const Banner = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
           },
         }
       );
@@ -209,7 +211,13 @@ const Banner = () => {
   const handleDeleteSlider = async (sliderId) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}/slider/${sliderId}`
+        `${import.meta.env.VITE_SERVER_URL}/slider/${sliderId}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
       );
       toast.success(response.data.message);
       setSliders(sliders.filter((slider) => slider._id !== sliderId));

@@ -49,7 +49,8 @@ const Categories = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-          },
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
       toast.success(response.data.message);
@@ -63,7 +64,12 @@ const Categories = () => {
   const getCategoriesData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/admin/category`
+        `${import.meta.env.VITE_SERVER_URL}/admin/category`,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
       );
       setCategories(response.data.categories);
     } catch (error) {
@@ -93,7 +99,13 @@ const Categories = () => {
       formData.append("subcategoryLogo", subCategoryLogoFile);
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/admin/subcategory`,
-        formData
+        formData,
+        {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          },
+        }
+
       );
       toast.success("Subcategory added successfully");
       setInputText("");
@@ -214,7 +226,7 @@ const Categories = () => {
                 key={category._id}
                 className="relative flex flex-col bg-white shadow-md shadow-black/30 p-4 rounded-md"
               >
-                {category.selected ? (
+                {/* {category.selected ? (
                   <div className="flex items-center justify-end text-[19px] gap-1">
                     <IoStar
                       className="text-yellow-500 cursor-pointer"
@@ -230,7 +242,7 @@ const Categories = () => {
                     />
                     <IoClose className="cursor-pointer" />
                   </div>
-                )}
+                )} */}
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-3 justify-between">
                     <div className="flex flex-col font-semibold text-[13px] md:text-sm">

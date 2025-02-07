@@ -97,9 +97,11 @@ const Orders = () => {
 
   const getAllOrders = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/order`
-      );
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/order`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+        }
+      });      
       setOrders(response.data.orders);
       const initialDeliveryDates = {};
       response.data.orders.forEach((order) => {
@@ -130,8 +132,14 @@ const Orders = () => {
         {
           orderId,
           deliveryDate: new Date(deliveryDate).toISOString(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
+      
       toast.success("Delivery date updated successfully!");
       getAllOrders();
     } catch (error) {
@@ -147,6 +155,11 @@ const Orders = () => {
         {
           orderId,
           newStatus,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+          }
         }
       );
       toast.success(res.data.message);

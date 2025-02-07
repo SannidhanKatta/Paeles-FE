@@ -96,7 +96,7 @@ const Users = () => {
         `${import.meta.env.VITE_SERVER_URL}/auth/getUsers`
       );
       setUsers(response.data);
-      // console.log(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -167,9 +167,9 @@ const Users = () => {
                   <th className="py-2 px-4">Name</th>
                   <th className="py-2 px-4">Email</th>
                   <th className="py-2 px-4">Phone</th>
-                  <th className="py-2 px-4">Orders</th>
+                  {/* <th className="py-2 px-4">Orders</th> */}
                   {/* <th className="py-2 px-4">Level</th> */}
-                  <th className="py-2 px-4">Action</th>
+                  {/* <th className="py-2 px-4">Action</th> */}
                 </tr>
               </thead>
               <tbody className="">
@@ -194,7 +194,7 @@ const Users = () => {
                           <VendorDetailsDialog
                             close={closeDialog}
                             data={item}
-                            heading={"Vendor Detail"}
+                            heading={"User Detail"}
                           />
                         )}
                         <td className="text-center py-2 px-4 text-[13px] md:text-[15px] 2xl:text-[16px] my-2  dark:text-gray-400 text-[#495058]  font-[600] plus-jakarta plus-jakarta">
@@ -206,11 +206,11 @@ const Users = () => {
                         <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                           {item?.phone}
                         </td>
-                        <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
+                        {/* <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                           {item?.orders}
-                        </td>
+                        </td> */}
                         {/* <td>{item?.isVerified ? "Verified" : "Not Verified"}</td> */}
-                        <td className="  items-center gap-2 py-2 px-4">
+                        {/* <td className="  items-center gap-2 py-2 px-4">
                           <button
                             onClick={() => {
                               setDialog(true);
@@ -220,7 +220,7 @@ const Users = () => {
                           >
                             View
                           </button>
-                        </td>
+                        </td> */}
                       </tr>
                     );
                   })}

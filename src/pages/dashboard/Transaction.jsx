@@ -12,7 +12,13 @@ const Transactions = () => {
 
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/order/getAllPayments`
+          `${import.meta.env.VITE_SERVER_URL}/order/getAllPayments`,
+          {
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            },
+          }
+
         );
         setTransactions(response.data.payments);
         console.log(response.data.payments);
@@ -64,6 +70,7 @@ const Transactions = () => {
               <thead className="">
                 <tr className="text-[#363F4D] font-[700] plus-jakarta text-[13px] md:text-[15px] 2xl:text-[16px] bg-[#e5e5e5]">
                   <th className="py-2 px-4">Transaction ID</th>
+                  <th className="py-2 px-4">Customer</th>
                   <th className="py-2 px-4">Amount</th>
                   <th className="py-2 px-4">Status</th>
                   <th className="py-2 px-4">Payment Method</th>
@@ -77,6 +84,9 @@ const Transactions = () => {
                       {transaction.paymentId}
                     </td>
                     <td className="text-center py-2 px-4 text-[13px] md:text-[15px] 2xl:text-[16px] my-2  dark:text-gray-400 text-[#495058] font-[600] plus-jakarta plus-jakarta">
+                      {transaction.customer?.name}
+                    </td>
+                    <td className="text-center py-2 px-4 text-[13px] md:text-[15px] 2xl:text-[16px] my-2  dark:text-gray-400 text-[#495058] font-[600] plus-jakarta plus-jakarta">
                       {transaction.amount}
                     </td>
                     <td className="py-2 px-4 my-2">{transaction.status}</td>
@@ -86,10 +96,10 @@ const Transactions = () => {
                     <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                       {new Date(transaction.createdAt).toLocaleDateString("en-US", {
                         weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                  })}
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
                     </td>
                   </tr>
                 ))}
