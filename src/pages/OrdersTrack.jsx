@@ -59,7 +59,7 @@ const ordersTrack = ({ order, status, deliveryDate, createdAt }) => {
 
   return (
     <>
-      <div className="  fixed inset-0 w-full min-h-[100vh] flex items-center justify-center bg-black/30 overflow-hidden z-40 ">
+      <div className="  fixed inset-0 w-full min-h-[100vh] flex items-center justify-center  overflow-hidden z-40 ">
         <div
           onClick={() => {
             setIsOrdersTrackForm(false);
@@ -150,9 +150,9 @@ const ordersTrack = ({ order, status, deliveryDate, createdAt }) => {
                 value={
                   status === "orderReceived"
                     ? 0
-                    : status === "inprogress"
+                    : status === "inProgress"
                       ? 25
-                      : status === "pending"
+                      : status === "qualityCheck"
                         ? 50
                         : status === "outForDelivery"
                           ? 75

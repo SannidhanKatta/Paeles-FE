@@ -58,7 +58,7 @@ const RatingForm2 = ({ order }) => {
 
   return (
     <>
-      <div className="  fixed inset-0 w-full min-h-[100vh] flex items-center justify-center bg-black/30 overflow-hidden z-40 ">
+      <div className="  fixed inset-0 w-full min-h-[100vh] flex items-center justify-center  overflow-hidden z-40 ">
         <div
           onClick={() => {
             setIsRatingFormOpen(false);

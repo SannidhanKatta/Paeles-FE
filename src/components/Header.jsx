@@ -197,7 +197,7 @@ const Header = () => {
     // Fetch categories from an API or define them statically
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/admin/category`);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/category`);
         setCategories(response.data.categories);
       } catch (error) {
         console.error("Error fetching categories:", error);

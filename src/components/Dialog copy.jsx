@@ -16,7 +16,7 @@ export default function MobileShopFilter() {
   const getAllCategories = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/admin/category`
+        `${import.meta.env.VITE_SERVER_URL}/category`
       );
       setCategories(response.data?.categories);
     } catch (error) {

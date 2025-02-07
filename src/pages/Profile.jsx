@@ -237,14 +237,17 @@ const Orders = ({ userData }) => {
                       </Link>
                     </div>
                     <div className="pt-2 md:p-4 flex flex-col gap-2 items-center justify-center">
-                      <button
-                        onClick={() => {
-                          setIsOrdersTrackForm(true);
-                        }}
-                        className="px-6 py-2 rounded-md bg-[#FF7004] text-white font-semibold transition duration-200 hover:bg-white hover:text-[#FF7004] border-2 border-transparent hover:border-[#FF7004] w-full md:w-fit"
-                      >
-                        Track Order
-                      </button>
+                      {order?.status?.toLowerCase() != "orderdelivered" && (
+                        <button
+                          onClick={() => {
+                            setIsOrdersTrackForm(true);
+                          }}
+                          className="px-6 py-2 rounded-md bg-[#FF7004] text-white font-semibold transition duration-200 hover:bg-white hover:text-[#FF7004] border-2 border-transparent hover:border-[#FF7004] w-full md:w-fit"
+                        >
+                          Track Order
+                        </button>)
+                      }
+
                       {order?.status?.toLowerCase() === "orderdelivered" && (
                         <button
                           onClick={() => {
