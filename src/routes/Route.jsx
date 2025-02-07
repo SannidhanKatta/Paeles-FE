@@ -5,6 +5,8 @@ import Checkout from "@/pages/Checkout";
 import PaymentForm from "@/pages/CheckoutIPG";
 import Contact from "@/pages/Contact";
 import Error404 from "@/pages/Error404";
+import FailedTransactionPage from "@/pages/Failure";
+import Failed from "@/pages/Failure";
 import ForgotPassword from "@/pages/ForgotPassword";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -77,6 +79,12 @@ export const userRoutes = [
     title: "Successfull Transaction",
     component: <SuccessTransactionPage />,
     path: "/successTransaction",
+  },
+  {
+    name: "Failed transaction",
+    title: "Failed Transaction",
+    component: <FailedTransactionPage />,
+    path: "/failedTransaction",
   },
   {
     name: "wishlist",
