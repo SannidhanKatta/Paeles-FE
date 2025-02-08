@@ -101,7 +101,7 @@ const Orders = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         }
-      });      
+      });
       setOrders(response.data.orders);
       const initialDeliveryDates = {};
       response.data.orders.forEach((order) => {
@@ -139,7 +139,7 @@ const Orders = () => {
           }
         }
       );
-      
+
       toast.success("Delivery date updated successfully!");
       getAllOrders();
     } catch (error) {
@@ -191,6 +191,18 @@ const Orders = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  useEffect(() => {
+    setTimeout(() => {
+      const element = document.querySelector(".overflow-x-auto");
+      if (element) {
+        element.scrollLeft = 0; // Reset scroll position
+        element.style.overflowX = "hidden"; // Temporarily hide overflow
+        element.offsetHeight; // Trigger reflow
+        element.style.overflowX = "auto"; // Restore overflow
+      }
+    }, 100);
+  }, []);
+
   return (
     <div className=" open-sans w-full min-h-[100vh] h-fit bg-[#F8F9FA] dark:bg-black rounded-lg px-[2%] py-4 md:py-10 z-50">
       <div className=" flex items-center gap-2 md:justify-between"></div>
