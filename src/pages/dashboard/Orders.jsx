@@ -191,17 +191,6 @@ const Orders = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  useEffect(() => {
-    setTimeout(() => {
-      const element = document.querySelector(".overflow-x-auto");
-      if (element) {
-        element.scrollLeft = 0; // Reset scroll position
-        element.style.overflowX = "hidden"; // Temporarily hide overflow
-        element.offsetHeight; // Trigger reflow
-        element.style.overflowX = "auto"; // Restore overflow
-      }
-    }, 100);
-  }, []);
 
   return (
     <div className=" open-sans w-full min-h-[100vh] h-fit bg-[#F8F9FA] dark:bg-black rounded-lg px-[2%] py-4 md:py-10 z-50">
@@ -211,8 +200,8 @@ const Orders = () => {
         Orders
       </p>
 
-      <div className=" flex flex-col mt-3 md:mt-7 overflow-x-auto rounded-md dark:bg-white/5 bg-white p-3 md:p-5 ">
-        <div className="overflow-x-auto">
+      <div className=" flex flex-col mt-3 md:mt-7 overflow-x-auto whitespace-nowrap rounded-md dark:bg-white/5 bg-white p-3 md:p-5 ">
+        <div className="overflow-x-auto whitespace-nowrap">
           {dialog && (
             <VendorDetailsDialog
               close={closeDialog}
