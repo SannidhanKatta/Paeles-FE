@@ -70,11 +70,12 @@ const App = () => {
     };
     checkAdminStatus();
   }, [location.pathname]);
-  
+  const isAdminDashboard = location.pathname.startsWith("/admindashboard");
+
   return (
     <AppProvider>
-      <Header />
-      <ScrollToTop/>
+    {!isAdminDashboard && <Header />}
+    <ScrollToTop/>
       <ToastContainer/>
       <Routes>
         {userRoutes.map((item, index) => {

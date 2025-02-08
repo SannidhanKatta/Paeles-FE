@@ -84,7 +84,7 @@ export function DashboardNavbar() {
           {/* <div className="mr-auto md:mr-4 md:w-56">
             <Input label="Search" />
           </div> */}
-          <IconButton
+          {/* <IconButton
             variant="text"
             color="blue-gray"
             className="grid xl:hidden"
@@ -94,7 +94,7 @@ export function DashboardNavbar() {
               strokeWidth={3}
               className="h-6 w-6 dark:text-gray-100 text-blue-gray-500"
             />
-          </IconButton>
+          </IconButton> */}
           {/* <Link to="/auth/sign-in">
             <Button
               variant="text"

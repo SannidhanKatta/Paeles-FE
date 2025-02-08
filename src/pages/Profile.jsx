@@ -217,27 +217,45 @@ const Orders = ({ userData }) => {
                               </span>{" "}
                               <b>{product?.quantity}</b>
                             </p>
-                            {/* <p className="text-[#000] text-[15px] md:text-[14px] 2xl:text-[14px] capitalize">
-                      <span className="text-xs sm:text-sm font-medium capitalize">Color:</span> {product.color}
-                    </p>
-                    <p className="text-[#000] text-[15px] md:text-[14px] 2xl:text-[14px]">
-                      <span className="text-xs sm:text-sm font-medium capitalize">Rating:</span> {product.rating}
-                    </p> */}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-[#000] text-[15px] md:text-[16.5px] 2xl:text-[18px]">
+                              <span className="text-xs sm:text-sm font-medium">
+                                Order Date:
+                              </span>{" "}
+                              <b>{order?.createdAt.split("T")[0]}</b>
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-[#000] text-[15px] md:text-[16.5px] 2xl:text-[18px]">
+                              <span className="text-xs sm:text-sm font-medium">
+                                Expected Delivery Date:
+                              </span>{" "}
+                              {order?.deliveryDate ? (
+                                new Date(order?.deliveryDate).toLocaleDateString("en-US", {
+                                  weekday: "long",
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                })
+                              ) : (
+                                <span className="text-sm">Will be Updated Soon</span>
+                              )}
+                            </p>
                           </div>
                           <p className="text-[#000] text-[15px] md:text-[16.5px] 2xl:text-[16px] font-semibold">
                             <span className="text-xs sm:text-sm font-medium">
                               Total:
                             </span>
-                            {product?.quantity} x {currency}
                             {currency === "OMR"
                               ? (product?.product?.price * 1 * 0.1).toFixed(2)
-                              : product?.product?.price * 1}
+                              : product?.product?.price * 1} INR
                           </p>
                         </div>
                       </Link>
                     </div>
                     <div className="pt-2 md:p-4 flex flex-col gap-2 items-center justify-center">
-                      {order?.status?.toLowerCase() != "orderdelivered" && (
+                      {/* {order?.status?.toLowerCase() != "orderdelivered" && (
                         <button
                           onClick={() => {
                             setIsOrdersTrackForm(true);
@@ -246,14 +264,14 @@ const Orders = ({ userData }) => {
                         >
                           Track Order
                         </button>)
-                      }
+                      } */}
 
                       {order?.status?.toLowerCase() === "orderdelivered" && (
                         <button
                           onClick={() => {
                             setIsRatingFormOpen(true);
                           }}
-                          className="px-6 py-2 rounded-md bg-[#363F4D] text-white font-semibold transition duration-200 hover:bg-white hover:text-[#363F4D] border-2 border-transparent hover:border-[#363F4D] w-full md:w-fit"
+                          className="px-6 py-2 rounded-md bg-[#FF7004] text-white font-semibold transition duration-200 hover:bg-white hover:text-[#FF7004] border-2 border-transparent hover:border-[#FF7004] w-full md:w-fit"
                         >
                           Rate Product
                         </button>

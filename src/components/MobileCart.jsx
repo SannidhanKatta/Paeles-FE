@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { RiCloseLine, RiDeleteBin6Line } from "react-icons/ri";
 import { AppContext } from "../context/AppContext";
 import { MainAppContext } from "@/context/MainContext";
@@ -20,9 +20,12 @@ export default function MobileCart({ userData }) {
   const server_url = import.meta.env.VITE_SERVER_URL;
   const { userLoggedIn, setUserLoggedIn } = useAuth();
   const [coupon, setCoupon] = useState("");
-  const { isDarkMode, SetIsDarkMode, setCartCount } =
+  const { isDarkMode, SetIsDarkMode, setCartCount ,cartUpdated,setCartUpdated} =
     useContext(MainAppContext);
+    console.log("car",cartUpdated)
+
   const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
     const user = JSON.parse(localStorage.getItem("user"));
@@ -48,6 +51,17 @@ export default function MobileCart({ userData }) {
   useEffect(() => {
     getCoupon();
   }, [cart]);
+
+  useEffect(() => {
+      const fetchCart = async () => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        await getCart(user?._id || userData?._id);
+        console.log(user);
+        setCartUpdated(false); // Reset after fetching
+      };
+
+      fetchCart();
+  }, [location.pathname]);
 
   const getCart = async (userId) => {
     if (userLoggedIn) {

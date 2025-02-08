@@ -224,6 +224,12 @@ const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMobileMenuOpen]);
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUserLoggedIn(false);
+    toast.success("Successfully logged out");
+    navigate("/");
+  };
 
   return (
     <div className="w-full sticky top-0 z-[999] bg-white shadow-md">
@@ -327,6 +333,10 @@ const Header = () => {
             )}
             <Link to="/about" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
             <Link to="/contact" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+            {
+              userLoggedIn && <Link to="" className="py-2" onClick={handleLogout}>Logout</Link>
+            }
+            
           </div>
         </div>
       )}

@@ -553,36 +553,6 @@ const ProductPage = ({ }) => {
                       ))}
                   </div>
 
-                  <div className="w-full">
-                    <div className=" grid grid-cols-1 lg:grid-cols-2 lg:gap-5">
-                      {product.arFilePath && ARSupported && (
-                        <model-viewer
-                          key={product.id}
-                          ref={model}
-                          src={product.arFilePath}
-                          ios-src={product.iOSSrc || ""}
-                          alt="A 3D model"
-                          ar
-                          ar-modes="webxr scene-viewer quick-look"
-                          camera-controls
-                          auto-rotate
-                        // style={modelViewerStyle}
-                        >
-                          <button
-                            slot="ar-button"
-                            className="raleway flex items-start justify-start gap-2 text-left text-[13px] py-2.5 mt-2 w-full"
-                          >
-                            <img
-                              className="h-[23px] dark:invert object-contain"
-                              src="/logos/space.svg"
-                              alt="logo"
-                            />
-                          </button>
-                        </model-viewer>
-                      )}
-
-                    </div>
-                  </div>
                 </div>
 
                 <div className="flex flex-col lg:w-[100%] col-span-4 xl:w-[100%] ">
@@ -616,7 +586,7 @@ const ProductPage = ({ }) => {
                           // Handle size selection
                           setSelectedSize(size);
                         }}
-                        className={`border p-2 rounded cursor-pointer ${size.stock > 0 ? "bg-gray-400" : "bg-gray-400 line-through"} ${selectedSize?.size === size.size ? "border-2 border-blue-500" : ""}`}
+                        className={`border p-2 rounded cursor-pointer ${size.stock > 0 ? "bg-gray-400" : "bg-gray-400 line-through disabled:cursor-not-allowed"} ${(selectedSize?.size === size.size && size?.stock > 0) ? "border-2 border-blue-500" : ""}`}
                       >
                         {size.size} {size.stock > 0 ? "" : "(Out of stock)"}
                       </div>
