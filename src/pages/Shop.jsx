@@ -105,7 +105,13 @@ const Shop = () => {
   const getAllProducts = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/products`);
-      setSortedArray(response.data.products);
+      // Directly set both arrays to ensure consistency
+      const products = response.data.products;
+      setSortedArray(products);
+      setProducts(products); // If you have a Products state
+
+      // Log to verify we're getting all products
+      console.log('Total products fetched:', products.length);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -115,28 +121,24 @@ const Shop = () => {
     window.scrollTo(0, 0);
     getAllCategories();
     getAllBanners();
-    getAllProducts();
+    getAllProducts(); // This will now set the full products array
+
+    // Move the rest of the initialization after products are fetched
     const user = JSON.parse(localStorage.getItem("user"));
     setUserDetails(user);
-    setSortedArray(Products);
-    const maxPrice = Products.reduce((max, product) => {
-      return product.price > max ? product.price : max;
-    }, 0);
-    setMaxPrice(Number(maxPrice));
-    set_maxValue(Number(maxPrice));
-
-    console.log(category, subcategory);
-    setFilterCategories(category ? category.toLowerCase() : "all");
-    setFilterSubCategories(subcategory ? subcategory.toLowerCase() : "all");
     setWishlistedProducts(wishlist);
+
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-  }, [category, subcategory, Products]);
+  }, []); // Remove Products dependency to avoid circular updates
 
+  // Separate useEffect for category/subcategory changes
   useEffect(() => {
-    setFilterCategories(category ? category.toLowerCase() : "all");
-    setFilterSubCategories(subcategory ? subcategory.toLowerCase() : "all");
+    if (category || subcategory) {
+      setFilterCategories(category ? category.toLowerCase() : "all");
+      setFilterSubCategories(subcategory ? subcategory.toLowerCase() : "all");
+    }
   }, [category, subcategory]);
 
   useEffect(() => {
@@ -150,26 +152,53 @@ const Shop = () => {
     }
   }, [category]);
 
-  const sortProducts = (method) => {
+  const filterProducts = (products) => {
+    if (!products) return [];
+
+    return products.filter((product) => {
+      // Check if product matches category filter
+      const matchesCategory =
+        filterCategories === "all" ||
+        product?.mainCategory?.some(
+          (cat) => cat.toLowerCase() === filterCategories.toLowerCase()
+        );
+
+      // Check if product matches subcategory filter
+      const matchesSubcategory =
+        filterSubCategories === "all" ||
+        product?.subCategory?.some(
+          (sub) => sub.toLowerCase() === filterSubCategories.toLowerCase()
+        );
+
+      return matchesCategory && matchesSubcategory && product?.approved;
+    });
+  };
+
+  // Update the useEffect for sorting to include filtering
+  useEffect(() => {
+    const filteredProducts = filterProducts(Products);
+    const sortedProducts = sortProducts(sortMethod, filteredProducts);
+    setSortedArray(sortedProducts);
+  }, [Products, sortMethod, filterCategories, filterSubCategories]);
+
+  // Update the sortProducts function to accept the products array
+  const sortProducts = (method, productsToSort) => {
+    const products = productsToSort || Products;
     switch (method) {
       case "2":
-        return [...Products].sort((a, b) => a.price - b.price);
+        return [...products].sort((a, b) => a.price - b.price);
       case "3":
-        return [...Products].sort((a, b) => b.price - a.price);
+        return [...products].sort((a, b) => b.price - a.price);
       case "4":
-        return [...Products].sort((a, b) => a.title.localeCompare(b.title));
+        return [...products].sort((a, b) => a.title.localeCompare(b.title));
       case "5":
-        return [...Products].sort((a, b) => b.title.localeCompare(a.title));
+        return [...products].sort((a, b) => b.title.localeCompare(a.title));
       default:
-        return [...Products].sort(
+        return [...products].sort(
           (a, b) => Number(b.avgRating) - Number(a.avgRating)
         );
     }
   };
-
-  useEffect(() => {
-    setSortedArray(sortProducts(sortMethod));
-  }, [Products, sortMethod]);
 
   const Stars = ({ stars }) => {
     const ratingStars = Array.from({ length: 5 }, (elem, index) => {
@@ -369,123 +398,59 @@ const Shop = () => {
                     </div>
                   ) : (
                     <>
-                      <div className="w-full grid-cols-2 sm:grid-cols-3 grid lg:grid-cols-4 gap-5">
-                        {sortedArray
-                          .filter((product) => {
-                            console.log(product);
-                            const isPriceInRange =
-                              Number(product.price) > minValue &&
-                              Number(product.price) < maxValue;
-                            const matchesCategory =
-                              filterCategories === "all" ||
-                              product?.mainCategory?.some(
-                                (cat) =>
-                                  cat.toLowerCase() ===
-                                  filterCategories.toLowerCase()
-                              );
-
-                            const matchesSubCategory =
-                              filterSubCategories === "all" ||
-                              product?.subCategory?.some(
-                                (cat) =>
-                                  cat.toLowerCase() ===
-                                  filterSubCategories.toLowerCase()
-                              );
-
-                            return (
-                              product?.approved &&
-                              Number(product.price) > minValue &&
-                              Number(product.price) < maxValue &&
-                              matchesCategory &&
-                              (filterSubCategories === "all" || matchesSubCategory)
-                            );
-                          })
-                          ?.slice(0, itemsPerPage)
-                          .map((item, index) => (
-                            <div
-                              key={index}
-                              className={`relative flex flex-col items-center justify-between border border-gray-300 dark:border-gray-700 rounded-md p-3 shadow shadow-black/30`}
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {sortedArray.map((product, index) => (
+                          <div key={product._id || index} className="border p-4 rounded">
+                            <Link
+                              to={`/product/${product?.title?.replace(/\//g, "").replace(/\s+/g, "-")}?productId=${product?._id}`}
+                              onClick={() => {
+                                setProductPageId(product?._id);
+                              }}
                             >
-                              {wishlistedProducts.find(
-                                (i) => i?.productId?._id === item._id
-                              ) ? (
-                                <IoHeartCircle
-                                  onClick={() => handleRemoveWishlist(item?._id)}
-                                  className="absolute top-3 right-3 cursor-pointer hover:text-red-500 text-[25px] text-red-500"
-                                />
-                              ) : (
-                                <IoHeartCircle
-                                  onClick={() => handleAddToWishlist(item?._id)}
-                                  className="absolute top-3 right-3 cursor-pointer hover:text-red-500 text-[25px] text-gray-600"
-                                />
-                              )}
-                              <Link
-                                to={`/product/${item?.title.replace(/\s+/g, "-")}?productId=${item?._id}`}
-                                onClick={() => {
-                                  sessionStorage.setItem(
-                                    "productPageId",
-                                    JSON.stringify(item?._id)
-                                  );
-                                  setProductPageId(item?._id);
-                                }}
-                                className="w-full h-full flex flex-col items-center"
-                              >
+                              <div className="relative">
                                 <img
-                                  className="object-cover object-center w-full h-[200px]"
-                                  src={item.mainImage}
-                                  alt="product-img"
+                                  src={product.mainImage}
+                                  alt={product.title}
+                                  className="w-full h-[200px] object-cover"
                                 />
-                                <div className="flex justify-between w-full mt-2">
-                                  <div className="flex flex-col items-start">
-                                    <p className="font-[600] plus-jakarta text-[14px] md:text-[16px] text-left">
-                                      {item.title?.slice(0, 50)}
-                                    </p>
-                                    <div className="flex items-center">
-                                      <Stars
-                                        stars={
-                                          item?.avgRating
-                                            ? item?.avgRating
-                                            : Math.floor(Math.random() * 6)
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className="flex flex-col items-end">
-                                    {item.discountValue > 0 ? (
-                                      <>
-                                        <p className="font-[600] plus-jakarta text-[#151514]">
-                                          {currency} {item.discountValue}
-                                        </p>
-                                        <p className="font-[600] plus-jakarta text-[#A4A4A4] line-through">
-                                          {currency} {item.price}
-                                        </p>
-                                      </>
-                                    ) : (
-                                      <p className="font-[600] plus-jakarta text-[#111111]">
-                                        {currency} {item.price}
-                                      </p>
-                                    )}
-                                  </div>
+                                {/* Add wishlist icon */}
+                                <div className="absolute top-2 right-2">
+                                  {wishlistedProducts.find((i) => i?.productId?._id === product?._id) ? (
+                                    <IoHeartCircle
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        handleRemoveWishlist(product?._id);
+                                      }}
+                                      className="cursor-pointer text-[25px] text-red-500"
+                                    />
+                                  ) : (
+                                    <IoHeartCircle
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        handleAddToWishlist(product?._id);
+                                      }}
+                                      className="cursor-pointer text-[25px] text-gray-600"
+                                    />
+                                  )}
                                 </div>
-                              </Link>
-                              {/* <Link
-                                  to={`/product/${item?.title.replace(/\s+/g, "-")}`}
-                                  onClick={() => {
-                                    sessionStorage.setItem(
-                                      "productPageId",
-                                      JSON.stringify(item?._id)
-                                    );
-                                    setProductPageId(item?._id);
-                                  }}
-                                >
-                                  <button
-                                    className="text-sm dark:text-black font-semibold bg-[#efefef] py-2 w-full"
-                                  >
-                                    View Product
-                                  </button>
-                                </Link> */}
-                            </div>
-                          ))}
+                              </div>
+                              <div className="mt-2">
+                                <h3 className="text-lg font-semibold">{product.title}</h3>
+                                <p className="text-gray-600">
+                                  {currency} {product.price}
+                                </p>
+                                {/* Add rating stars */}
+                                <div className="flex">
+                                  {[...Array(5)].map((_, i) => (
+                                    <span key={i} className={i < (product.avgRating || 0) ? "text-yellow-800" : "text-gray-300"}>
+                                      ★
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
                       </div>
                       {sortedArray?.filter((e) => {
                         const matchesCategory =
@@ -530,7 +495,7 @@ const Shop = () => {
                         setSelectedCategory(selectedCategory === category.fileName ? null : category.fileName);
                       }}
                       className={`flex justify-between items-center py-2 cursor-pointer ${category.fileName.toLowerCase() === filterCategories.toLowerCase()
-                        ? 'text-[#F9BA48]'
+                        ? 'text-[#e6ce6e]'
                         : 'text-gray-800'
                         }`}
                     >

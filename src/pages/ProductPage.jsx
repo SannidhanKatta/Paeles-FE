@@ -583,10 +583,18 @@ const ProductPage = ({ }) => {
                       <div
                         key={index}
                         onClick={() => {
-                          // Handle size selection
-                          setSelectedSize(size);
+                          // Only set selected size if stock is available
+                          if (size.stock > 0) {
+                            setSelectedSize(size);
+                          }
                         }}
-                        className={`border p-2 rounded cursor-pointer ${size.stock > 0 ? "bg-gray-400" : "bg-gray-400 line-through disabled:cursor-not-allowed"} ${(selectedSize?.size === size.size && size?.stock > 0) ? "border-2 border-blue-500" : ""}`}
+                        className={`border p-2 rounded ${size.stock > 0
+                          ? "bg-gray-400 cursor-pointer hover:bg-gray-500"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-50"
+                          } ${selectedSize?.size === size.size && size.stock > 0
+                            ? "border-2 border-blue-500"
+                            : ""
+                          }`}
                       >
                         {size.size} {size.stock > 0 ? "" : "(Out of stock)"}
                       </div>

@@ -88,7 +88,7 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                   Name:
                 </span>
                 <p
-                className=" py-2 px-4 inline mt-1"
+                  className=" py-2 px-4 inline mt-1"
                 >
                   {customerDetails.name}
                 </p>
@@ -98,7 +98,7 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                   Email:
                 </span>
                 <p
-                className=" py-2 px-4 inline mt-1"
+                  className=" py-2 px-4 inline mt-1"
                 >
                   {customerDetails.email}
                 </p>
@@ -108,7 +108,7 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                   address:
                 </span>
                 <p
-                className=" py-2 px-4 inline mt-1"
+                  className=" py-2 px-4 inline mt-1"
                 >
                   {customerDetails.address}
                 </p>
@@ -118,7 +118,7 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                   Phone:
                 </span>
                 <p
-                className=" py-2 px-4 inline mt-1"
+                  className=" py-2 px-4 inline mt-1"
                 >
                   +{customerDetails.phone}
                 </p>
