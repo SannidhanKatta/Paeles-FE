@@ -955,9 +955,10 @@ const ProductPage = ({ }) => {
                 </div>
                 {activeTab === 1 ? (
                   <div className="bg-white flex flex-col text-xs sm:text-sm lg:p-7 py-3 lg:py-10 font-[400]">
-                    <p className="raleway text-[12px] md:text-[13.3px] 2xl:text-[14px]">
-                      {parse(product?.editorContent || "")}
-                    </p>
+                    <div 
+                      className="raleway text-[12px] md:text-[13.3px] 2xl:text-[14px]"
+                      dangerouslySetInnerHTML={{ __html: product?.editorContent }}
+                    />
                   </div>
                 ) : (
                   <div className="bg-white flex flex-col items-center justify-center text-xs sm:text-sm lg:p-7 py-3 lg:py-10 font-[400]">

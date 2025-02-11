@@ -81,7 +81,7 @@ const AddProduct = () => {
     available: "",
     // pieces: "",
     promotional: "New",
-    // editorContent: "",
+    editorContent: "",
     // width: "",
     // height: "",
     // weight: "",

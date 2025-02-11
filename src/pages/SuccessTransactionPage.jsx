@@ -23,7 +23,7 @@ const SuccessTransactionPage = () => {
           <path fill="#fff" fillRule="nonzero" d="M158.04 235.26c19.67 11.33 32.46 20.75 47.71 37.55 39.53-63.63 82.44-98.89 138.24-148.93l5.45-2.11h61.06c-81.87 90.93-145.34 165.9-202.18 275.53-29.59-63.26-55.96-106.93-114.96-147.43l64.68-14.61z" />
         </svg>
         <h1 className="text-2xl font-bold text-green-600">
-          Transaction Successful!
+          Order Placed Successfully!
         </h1>
         <p className="mt-4 text-gray-600 text-center">
           Your payment has been processed successfully.
