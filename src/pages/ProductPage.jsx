@@ -521,36 +521,35 @@ const ProductPage = ({ }) => {
                   </div>
 
                   {/* Thumbnail images section */}
-                  <div className="raleway grid grid-cols-4 gap-1">
-                    {/* Main image */}
-                    <img
-                      onClick={() => {
-                        SetActiveImage(product?.mainImage);
-                      }}
-                      src={product?.mainImage}
-                      alt={"mainImage"}
-                      className={`${activeImage === product?.mainImage
-                        ? "opacity-40 border-[2px] border-orange-400"
-                        : "cursor-pointer"
-                        } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
-                    />
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {/* Main image thumbnail */}
+                    <div
+                      className="relative cursor-pointer w-[60px] h-[60px] border border-gray-200"
+                      onClick={() => SetActiveImage(product?.mainImage)}
+                    >
+                      <img
+                        src={product?.mainImage}
+                        alt="Main product view"
+                        className={`w-full h-full object-cover ${activeImage === product?.mainImage ? 'border-2 border-black' : ''
+                          }`}
+                      />
+                    </div>
 
-                    {/* Additional images */}
-                    {product?.additionalImages &&
-                      product?.additionalImages.slice(0, 3).map((image, index) => (
+                    {/* Additional images thumbnails */}
+                    {product?.additionalImages?.slice(0, 10).map((image, index) => (
+                      <div
+                        key={index}
+                        className="relative cursor-pointer w-[60px] h-[60px] border border-gray-200"
+                        onClick={() => SetActiveImage(image)}
+                      >
                         <img
-                          key={index}
-                          onClick={() => {
-                            SetActiveImage(image);
-                          }}
                           src={image}
-                          alt={"product-pics"}
-                          className={`${activeImage === image
-                            ? "opacity-40 border-[2px] border-orange-400"
-                            : "cursor-pointer"
-                            } h-[70px] lg:h-[80px] w-fit md:w-full object-cover`}
+                          alt={`Product view ${index + 1}`}
+                          className={`w-full h-full object-cover ${activeImage === image ? 'border-2 border-black' : ''
+                            }`}
                         />
-                      ))}
+                      </div>
+                    ))}
                   </div>
 
                 </div>
@@ -955,7 +954,7 @@ const ProductPage = ({ }) => {
                 </div>
                 {activeTab === 1 ? (
                   <div className="bg-white flex flex-col text-xs sm:text-sm lg:p-7 py-3 lg:py-10 font-[400]">
-                    <div 
+                    <div
                       className="raleway text-[12px] md:text-[13.3px] 2xl:text-[14px]"
                       dangerouslySetInnerHTML={{ __html: product?.editorContent }}
                     />

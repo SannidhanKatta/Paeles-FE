@@ -31,15 +31,29 @@ const AddProduct = () => {
   const [percentage, setPercentage] = useState(0);
   const isMounted = useRef(false);
 
-  const handleChange = (file) => {
-    console.log(file);
-    const additionalImagesArray = Array.from(file);
-    setFile(additionalImagesArray);
-    setProductDetails({
-      ...productDetails,
-      additionalImages: additionalImagesArray,
-    });
+  const handleChange = (newFiles) => {
+    // Convert FileList to Array if it isn't already
+    const newFilesArray = Array.from(newFiles);
+
+    // Combine existing files with new files
+    setFile(prevFiles => [...prevFiles, ...newFilesArray]);
+
+    // Update product details with combined files
+    setProductDetails(prevDetails => ({
+      ...prevDetails,
+      additionalImages: [...(prevDetails.additionalImages || []), ...newFilesArray],
+    }));
   };
+
+  // Add a function to remove individual images
+  const handleRemoveImage = (indexToRemove) => {
+    setFile(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
+    setProductDetails(prevDetails => ({
+      ...prevDetails,
+      additionalImages: prevDetails.additionalImages.filter((_, index) => index !== indexToRemove),
+    }));
+  };
+
   const handleChange2 = (file) => {
     console.log(file);
     const mainImageFile = file[0];
@@ -836,36 +850,40 @@ const AddProduct = () => {
                         Additional Images
                         <span className=" text-red-500 text-[24px]">*</span>
                       </h4>
-                      <div className=" flex-col flex items-center justify-center px-5 py-3">
-                        {/* <label
-                          className=" dark:text-gray-400 text-[#4F5D77] font-[700] plus-jakarta text-[12px] md:text-[13px] 2xl:text-[14.4px] mb-1 "
-                          htmlFor="additional-image"
-                        >
-                          <img
-                            className=" w-[60px] h-[60px] sm:w-[100px] sm:h-[100px] object-contain"
-                            src="/Images/uploadImg.png"
-                            alt="upload-img"
-                          />
-                        </label> */}
-                        <div className=" flex flex-col items-center text-sm justify-center relative w-full h-[300px]">
-                          <FileUploader
-                            multiple
-                            handleChange={handleChange}
-                            name="file"
-                            types={fileTypes}
-                            required
-                            style={{ height: "500px" }}
-                            hoverTitle="Drop Your Product Images here"
-                          />
-                          <p className=" mt-1 text-gray-700">
-                            {file.length > 0
-                              ? `File names: ${file.map(f => f.name).join(', ')}`
-                              : "no files uploaded yet"}
-                          </p>
-                          <p className=" text-gray-700">
-                            maximum upload size : 256 MB
-                          </p>
+                      <div className="flex-col flex items-center text-sm justify-center relative w-full">
+                        <FileUploader
+                          multiple
+                          handleChange={handleChange}
+                          name="file"
+                          types={fileTypes}
+                          required
+                          style={{ minHeight: "200px" }}
+                          hoverTitle="Drop Your Product Images here"
+                        />
+
+                        {/* Display uploaded files with remove option */}
+                        <div className="mt-4 w-full">
+                          {file.map((f, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 border-b">
+                              <p className="text-gray-700">{f.name}</p>
+                              <button
+                                onClick={() => handleRemoveImage(index)}
+                                className="text-red-500 hover:text-red-700"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          ))}
                         </div>
+
+                        <p className="mt-1 text-gray-700">
+                          {file.length > 0
+                            ? `File names: ${file.map(f => f.name).join(', ')}`
+                            : "no files uploaded yet"}
+                        </p>
+                        <p className="text-gray-700">
+                          maximum upload size : 256 MB
+                        </p>
                       </div>
                       {/* <h4 className=" p-3 text-[16px] md:text-[18px] 2xl:text-[20px] font-[700] plus-jakarta border-b border-gray-200  dark:text-gray-400 text-[#363F4D] mb-1.5 ">
                         Add 360 view of Product
