@@ -105,15 +105,13 @@ const Shop = () => {
   const getAllProducts = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/products`);
-      // Directly set both arrays to ensure consistency
       const products = response.data.products;
       setSortedArray(products);
-      setProducts(products); // If you have a Products state
-
-      // Log to verify we're getting all products
-      console.log('Total products fetched:', products.length);
+      setProducts(products);
+      return products;
     } catch (error) {
       console.error("Error fetching products:", error);
+      return [];
     }
   };
 
@@ -121,23 +119,25 @@ const Shop = () => {
     window.scrollTo(0, 0);
     getAllCategories();
     getAllBanners();
-    getAllProducts(); // This will now set the full products array
+    getAllProducts().then(() => {
+      setLoading(false);
+    });
 
     // Move the rest of the initialization after products are fetched
     const user = JSON.parse(localStorage.getItem("user"));
     setUserDetails(user);
     setWishlistedProducts(wishlist);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
   }, []); // Remove Products dependency to avoid circular updates
 
   // Separate useEffect for category/subcategory changes
   useEffect(() => {
     if (category || subcategory) {
+      setLoading(true);
       setFilterCategories(category ? category.toLowerCase() : "all");
       setFilterSubCategories(subcategory ? subcategory.toLowerCase() : "all");
+      getAllProducts().then(() => {
+        setLoading(false);
+      });
     }
   }, [category, subcategory]);
 
@@ -437,7 +437,20 @@ const Shop = () => {
                               <div className="mt-2">
                                 <h3 className="text-lg font-semibold">{product.title}</h3>
                                 <p className="text-gray-600">
-                                  {currency} {product.price}
+                                  {product.discountValue > 0 ? (
+                                    <>
+                                      <span className="line-through">
+                                        {currency} {product.price}
+                                      </span>
+                                      <span className="text-black">
+                                        {currency} {product.discountValue}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span>
+                                      {currency} {product.price}
+                                    </span>
+                                  )}
                                 </p>
                                 {/* Add rating stars */}
                                 <div className="flex">

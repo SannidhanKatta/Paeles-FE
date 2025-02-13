@@ -303,12 +303,21 @@ const Home = () => {
               </p>
               <div className="flex items-center flex-wrap justify-center gap-6">
                 {categories.map((item, index) => (
-                  <Link to={`/shop/${item?.fileName}/all`} key={index} className="flex flex-col items-center">
+                  <Link
+                    to={`/shop/${item?.fileName}/all`}
+                    key={index}
+                    className="flex flex-col items-center"
+                    onClick={() => {
+                      // Clear existing data before navigation
+                      setFilteredProducts([]);
+                      setSortedArray([]);
+                    }}
+                  >
                     <div className="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
                       <img
                         className="object-cover w-full h-full"
                         src={item?.imageLink}
-                        alt={item.param}
+                        alt={item.fileName}
                       />
                     </div>
                     <span className="mt-2 text-center text-[#474747]">{item?.fileName}</span>
