@@ -34,13 +34,13 @@ const Checkout = () => {
     lastName,
     email,
     phone,
+    addressLine1,
     addressLine2,
     country,
     city,
     state,
     zipCode,
   } = userDetails;
-  const addressLine1 = userDetails.address;
   const onChange = (e) =>
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   const [subTotal, setSubTotal] = useState(0);
@@ -277,7 +277,7 @@ const Checkout = () => {
       firstName &&
       lastName &&
       email &&
-      phoneNumberValid && // Updated condition
+      phoneNumberValid &&
       addressLine1 &&
       country &&
       city &&
