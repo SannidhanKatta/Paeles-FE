@@ -362,6 +362,7 @@ const Checkout = () => {
                     type="email"
                     value={email}
                     onChange={onChange}
+                    readOnly
                     className=" w-full  dark:bg-transparent p-2 text-[#7A7A7A] text-[14.4px]"
                     placeholder="Email"
                   />
