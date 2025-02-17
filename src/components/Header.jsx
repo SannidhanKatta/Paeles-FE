@@ -112,6 +112,8 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const mobileMenuRef = useRef(null);
+  const [isSideNavOpen, setIsSideNavOpen] = useState(false);
+  const sideNavRef = useRef(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -224,6 +226,24 @@ const Header = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMobileMenuOpen]);
+
+  // Close sidenav when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (sideNavRef.current && !sideNavRef.current.contains(event.target)) {
+        setIsSideNavOpen(false);
+      }
+    }
+
+    if (isSideNavOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSideNavOpen]);
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUserLoggedIn(false);
@@ -233,112 +253,121 @@ const Header = () => {
 
   return (
     <div className="w-full sticky top-0 z-[999] bg-white shadow-md">
-      <div className="px-[3%] md:px-[8%] py-4 flex items-center justify-between bg-white dark:bg-white dark:text-black bottom-shadow">
-        {/* Hamburger menu for mobile - Updated with toggle icon */}
-        <div className="lg:hidden">
-          {isMobileMenuOpen ? (
+      {/* Main Header */}
+      <div className="px-[3%] md:px-[8%] py-4 flex items-center justify-between bg-white dark:bg-white dark:text-black">
+        {/* Menu Toggle - Only show on mobile */}
+        <div className="block md:hidden">
+          {isSideNavOpen ? (
             <RiMenu3Fill
               className="text-2xl cursor-pointer"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={() => setIsSideNavOpen(false)}
             />
           ) : (
             <RiMenu3Line
               className="text-2xl cursor-pointer"
-              onClick={() => setIsMobileMenuOpen(true)}
+              onClick={() => setIsSideNavOpen(true)}
             />
           )}
         </div>
 
-        {/* Logo */}
-        <Link to="/" className="flex-shrink-0">
-          <img
-            src={mainlogo}
-            className="w-[100px] md:w-[150px]"
-            alt="PAELESS"
-          />
+        {/* Logo - Centered on mobile, left-aligned on desktop */}
+        <Link to="/" className="flex-shrink-0 absolute left-1/2 transform -translate-x-1/2 md:static md:transform-none md:left-0">
+          <img src={mainlogo} className="w-[100px] md:w-[150px]" alt="PAELESS" />
         </Link>
 
-        {/* Comment out desktop search bar */}
-        {/* <div className="hidden md:flex flex-grow mx-4 max-w-xl">
-          <div className="relative w-full">
-            <input
-              type="text"
-              placeholder="Search your products here"
-              className="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <img
-                className="w-5 h-5"
-                src="/logos/Search.svg"
-                alt="search"
-              />
-            </button>
-          </div>
-        </div> */}
-
-        {/* Right side icons */}
+        {/* Right Icons */}
         <div className="flex items-center space-x-4">
-          {/* <Link to="tel:600 505253" className="hidden md:flex items-center">
-            <IoCall className="text-[20px] text-[#353535] mr-2" />
-            <span className="text-[#353535]">600 505253</span>
-          </Link> */}
+          {/* Cart icon - visible on all screens */}
           <Link to="/cart" className="relative">
             <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
               {cartCount || 0}
             </span>
             <IoCartOutline className="text-[22px] text-[#353535]" />
           </Link>
-          <Link to={userLoggedIn ? "/wishlist" : "/login"} className="hidden md:block">
-            <IoHeartOutline className="text-[20px] text-[#353535]" />
-          </Link>
-          <Link to={userLoggedIn ? "/profile" : "/login"} className="hidden md:block">
-            <img
-              className="w-[18px] h-[18px] object-contain cursor-pointer"
-              src="/logos/Person.svg"
-              alt="profile"
-            />
-          </Link>
-          {userLoggedIn && userDetails && (userDetails?.role === "vendor" || userDetails?.role === "admin") && (
-            <div className="relative hidden md:block">
-              {/* <BsThreeDotsVertical
-                className="cursor-pointer text-[18px]"
-                onClick={() => setViewNavOptions((prev) => !prev)}
-              /> */}
-              {viewNavOptions && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
-                  {/* ... (existing dropdown menu items) ... */}
-                </div>
-              )}
-            </div>
-          )}
+
+          {/* Other icons - only visible on desktop */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link to={userLoggedIn ? "/wishlist" : "/login"}>
+              <IoHeartOutline className="text-[20px] text-[#353535]" />
+            </Link>
+            <Link to={userLoggedIn ? "/profile" : "/login"}>
+              <img
+                className="w-[18px] h-[18px] object-contain cursor-pointer"
+                src="/logos/Person.svg"
+                alt="profile"
+              />
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Mobile menu with animation */}
-      {isMobileMenuOpen && (
-        <div
-          ref={mobileMenuRef}
-          className="lg:hidden bg-white dark:bg-gray-800 py-2 px-4 absolute w-full z-50 transition-all duration-300 ease-in-out"
-        >
-          <div className="flex flex-col space-y-2">
-            <Link to="/" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-            <Link to="/shop/all/all" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Shop</Link>
-            {userLoggedIn ? (
+      {/* Mobile Side Navigation */}
+      <div
+        ref={sideNavRef}
+        className={`md:hidden fixed top-0 left-0 h-full w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out z-[1000] ${isSideNavOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+      >
+        <div className="p-4">
+          {/* User Section */}
+          {userLoggedIn ? (
+            <div className="mb-6 p-4 border-b">
+              <p className="font-semibold">Hello, {userDetails?.name || 'User'}</p>
+              <p className="text-sm text-gray-600">{userDetails?.email}</p>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="block mb-6 p-3 text-center bg-gray-800 text-white rounded-md hover:bg-gray-700"
+            >
+              Login / Register
+            </Link>
+          )}
+
+          {/* Navigation Links */}
+          <nav className="space-y-4">
+            <Link to="/" className="block py-2 hover:text-orange-500" onClick={() => setIsSideNavOpen(false)}>
+              Home
+            </Link>
+            <Link to="/shop/all/all" className="block py-2 hover:text-orange-500" onClick={() => setIsSideNavOpen(false)}>
+              Shop
+            </Link>
+            {userLoggedIn && (
               <>
-                <Link to="/profile" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
-                <Link to="/wishlist" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Wishlist</Link>
+                <Link to="/profile" className="block py-2 hover:text-orange-500" onClick={() => setIsSideNavOpen(false)}>
+                  Profile
+                </Link>
+                <Link to="/wishlist" className="block py-2 hover:text-orange-500" onClick={() => setIsSideNavOpen(false)}>
+                  Wishlist
+                </Link>
               </>
-            ) : (
-              <Link to="/login" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
             )}
-            <Link to="/about" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
-            <Link to="/contact" className="py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-            {
-              userLoggedIn && <Link to="" className="py-2" onClick={handleLogout}>Logout</Link>
-            }
-            
-          </div>
+            <Link to="/about" className="block py-2 hover:text-orange-500" onClick={() => setIsSideNavOpen(false)}>
+              About
+            </Link>
+            <Link to="/contact" className="block py-2 hover:text-orange-500" onClick={() => setIsSideNavOpen(false)}>
+              Contact
+            </Link>
+            {userLoggedIn && (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsSideNavOpen(false);
+                }}
+                className="block w-full text-left py-2 text-red-500 hover:text-red-600"
+              >
+                Logout
+              </button>
+            )}
+          </nav>
         </div>
+      </div>
+
+      {/* Mobile Overlay */}
+      {isSideNavOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[999]"
+          onClick={() => setIsSideNavOpen(false)}
+        />
       )}
     </div>
   );

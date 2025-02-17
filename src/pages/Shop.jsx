@@ -106,7 +106,12 @@ const Shop = () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/products`);
       const products = response.data.products;
-      setSortedArray(products);
+
+      // Apply filters immediately after fetching
+      const filteredProducts = filterProducts(products);
+      const sortedProducts = sortProducts(sortMethod, filteredProducts);
+
+      setSortedArray(sortedProducts);
       setProducts(products);
       return products;
     } catch (error) {
@@ -116,18 +121,28 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    getAllCategories();
-    getAllBanners();
-    getAllProducts().then(() => {
-      setLoading(false);
-    });
+    const fetchInitialData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([
+          getAllCategories(),
+          getAllBanners(),
+          getAllProducts()
+        ]);
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Move the rest of the initialization after products are fetched
+    window.scrollTo(0, 0);
+    fetchInitialData();
+
     const user = JSON.parse(localStorage.getItem("user"));
     setUserDetails(user);
     setWishlistedProducts(wishlist);
-  }, []); // Remove Products dependency to avoid circular updates
+  }, []);
 
   // Separate useEffect for category/subcategory changes
   useEffect(() => {
@@ -411,7 +426,7 @@ const Shop = () => {
                                 <img
                                   src={product.mainImage}
                                   alt={product.title}
-                                  className="w-full h-[200px] object-cover"
+                                  className="w-full aspect-square object-contain"
                                 />
                                 {/* Add wishlist icon */}
                                 <div className="absolute top-2 right-2">
