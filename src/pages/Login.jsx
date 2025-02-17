@@ -198,7 +198,7 @@ const Login = () => {
               Register
             </Link>
           </p>
-          <div className=" flex items-center gap-1 my-3">
+          {/* <div className=" flex items-center gap-1 my-3">
             <span className=" h-[1px] flex-grow bg-black"></span>
             <span className=" font-[600] plus-jakarta w-max text-[12px] md:text-[14px] ">
               or use one of these options
@@ -210,12 +210,11 @@ const Login = () => {
               className="flex items-center justify-center bg-white hover:bg-blue-50 text-gray-700 px-6 py-2.5 rounded-lg w-full max-w-[300px] border-2 border-blue-100 transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-md hover:border-blue-200 group"
               onClick={loginWithGoogle}
             >
-              {/* <RiGoogleFill className="mr-2 text-[#4285f4] group-hover:scale-110 transition-transform duration-300" /> */}
               <span className="font-medium tracking-wide text-[15px] group-hover:text-blue-600 transition-colors duration-300">
                 Sign in with Google
               </span>
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
