@@ -95,7 +95,8 @@ export default function Featured2({
                 className="flex flex-col"
               >
                 <img
-                  className="h-[220px] w-full lg:h-[250px] xl:h-[310px] object-cover rounded-t-lg"
+                  // className="h-[220px] w-full lg:h-[250px] xl:h-[310px] object-cover rounded-t-lg"
+                  className="w-full aspect-square object-contain rounded-t-lg"
                   src={pro.mainImage}
                   alt="product-img"
                 />
