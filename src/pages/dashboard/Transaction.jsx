@@ -74,6 +74,7 @@ const Transactions = () => {
                   <th className="py-2 px-4">Amount</th>
                   <th className="py-2 px-4">Status</th>
                   <th className="py-2 px-4">Payment Method</th>
+                  <th className="py-2 px-4">Coupon Code</th>
                   <th className="py-2 px-4">Date</th>
                 </tr>
               </thead>
@@ -92,6 +93,9 @@ const Transactions = () => {
                     <td className="py-2 px-4 my-2">{transaction.status}</td>
                     <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                       {transaction.paymentMethod}
+                    </td>
+                    <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
+                      {transaction.couponCode}
                     </td>
                     <td className="text-center py-2 px-4 dark:text-gray-400 text-[#495058] my-1 text-[13px] md:text-[15px] 2xl:text-[16px]">
                       {new Date(transaction.createdAt).toLocaleDateString("en-US", {

@@ -250,7 +250,7 @@ const Cart = () => {
           total,
         }
       );
-      // setCoupon(response.data?.coupon);
+      sessionStorage.setItem("coupon", coupon);
       if (response.data?.coupon?.discountType === "percentage") {
         const total1 =
           parseFloat(
@@ -295,6 +295,7 @@ const Cart = () => {
       const response = await axios.delete(
         `${import.meta.env.VITE_SERVER_URL}/cart/removeCoupon/${userId}`
       );
+      sessionStorage.removeItem("coupon");
       toast.success(response.data.message);
       setDiscountAmt(0);
       getCoupon();
@@ -312,6 +313,7 @@ const Cart = () => {
       );
       console.log(response.data.coupon);
       setCouponName(response.data.coupon.code);
+      sessionStorage.setItem("coupon", response.data.coupon.code);
     } catch (err) {
       setCouponName(null);
     }

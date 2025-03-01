@@ -100,6 +100,7 @@ const Checkout = () => {
     console.log("User details:", userDetailsUpdated);
     console.log("Total amount:", total);
 
+    const coupon = sessionStorage.getItem("coupon");
     try {
       const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/order/phonepe-payment`, {
         method: "POST",
@@ -109,7 +110,8 @@ const Checkout = () => {
         body: JSON.stringify({
           products: productsToSend,
           customer: userDetailsUpdated,
-          totalAmount: total
+          totalAmount: total,
+          coupon: coupon ? coupon : null,
         }),
       });
 

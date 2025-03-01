@@ -158,6 +158,7 @@ export default function MobileCart({ userData }) {
             productId: productId,
           }
         );
+        sessionStorage.removeItem("coupon");
         getCart(userId);
         toast.success("Product Removed from Cart");
       } catch (error) {
@@ -196,6 +197,7 @@ export default function MobileCart({ userData }) {
           total,
         }
       );
+      sessionStorage.setItem("coupon", coupon);
       // // console.log(response.data);
       // setCoupon(response.data?.coupon);
       if (response.data?.coupon?.discountType === "percentage") {

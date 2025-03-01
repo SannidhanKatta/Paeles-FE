@@ -120,7 +120,7 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                 <p
                   className=" py-2 px-4 inline mt-1"
                 >
-                  +{customerDetails.phone}
+                  +91 {customerDetails.phone}
                 </p>
               </p>
 
@@ -237,6 +237,14 @@ const VendorDetailsDialog = ({ close, data, heading }) => {
                     review:
                   </span>
                   {data?.review}
+                </p>
+              )}
+              {data?.couponCode && (
+                <p>
+                  <span className=" text-sm md:text-md font-semibold mr-1">
+                  Coupon Code:
+                  </span>
+                  {data?.couponCode}
                 </p>
               )}
             </div>

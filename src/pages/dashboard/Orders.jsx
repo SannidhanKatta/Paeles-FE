@@ -103,6 +103,7 @@ const Orders = () => {
         }
       });
       setOrders(response.data.orders);
+      console.log(response.data.orders);
       const initialDeliveryDates = {};
       response.data.orders.forEach((order) => {
         if (order.deliveryDate) {
