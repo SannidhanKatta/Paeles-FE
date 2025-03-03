@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Link, useNavigate,useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { RiCloseLine, RiDeleteBin6Line } from "react-icons/ri";
 import { AppContext } from "../context/AppContext";
 import { MainAppContext } from "@/context/MainContext";
@@ -20,9 +20,9 @@ export default function MobileCart({ userData }) {
   const server_url = import.meta.env.VITE_SERVER_URL;
   const { userLoggedIn, setUserLoggedIn } = useAuth();
   const [coupon, setCoupon] = useState("");
-  const { isDarkMode, SetIsDarkMode, setCartCount ,cartUpdated,setCartUpdated} =
+  const { isDarkMode, SetIsDarkMode, setCartCount, cartUpdated, setCartUpdated } =
     useContext(MainAppContext);
-    console.log("car",cartUpdated)
+  console.log("car", cartUpdated)
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,14 +53,14 @@ export default function MobileCart({ userData }) {
   }, [cart]);
 
   useEffect(() => {
-      const fetchCart = async () => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        await getCart(user?._id || userData?._id);
-        console.log(user);
-        setCartUpdated(false); // Reset after fetching
-      };
+    const fetchCart = async () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      await getCart(user?._id || userData?._id);
+      console.log(user);
+      setCartUpdated(false); // Reset after fetching
+    };
 
-      fetchCart();
+    fetchCart();
   }, [location.pathname]);
 
   const getCart = async (userId) => {
@@ -184,50 +184,21 @@ export default function MobileCart({ userData }) {
 
   const applyCoupon = async () => {
     const userId = userDetails._id;
-
     try {
-      // if (discountAmt !== 0) {
-      //   return toast("Other Coupon Already Applied.");
-      // }
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/cart/applyCoupon`,
         {
           userId: userId,
           couponCode: coupon,
-          total,
+          total: total - totalDiscount // Pass amount after product discount
         }
       );
-      sessionStorage.setItem("coupon", coupon);
-      // // console.log(response.data);
-      // setCoupon(response.data?.coupon);
+      sessionStorage.setItem("coupon", response.data.coupon.code);
+      setCouponName(response.data.coupon.code);
       if (response.data?.coupon?.discountType === "percentage") {
-        const total1 =
-          parseFloat(
-            cart?.reduce(
-              (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
-              0
-            ) * response.data?.coupon?.discountAmount
-          ) / 100;
-        const total2 = parseFloat(
-          cart?.reduce(
-            (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
-            0
-          ) *
-          (response.data?.coupon?.discountAmount * 0.01)
-        );
-        // // // console.log(total1);
-        // setTotal(total1);
-        // console.log("6");
-        setDiscountAmt(total2);
+        const discountAmount = ((total - totalDiscount) * (response.data.coupon.discountAmount / 100));
+        setDiscountAmt(discountAmount);
       } else if (response.data?.coupon?.discountType === "fixed") {
-        // const total1 =
-        //   cart?.reduce(
-        //     (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
-        //     0
-        //   ) - response.data?.coupon?.discountAmount;
-        // // // console.log(total1);
-        // setTotal(total1);
-        // console.log("7");
         setDiscountAmt(response.data?.coupon?.discountAmount);
       }
       toast.success(response.data.message);
@@ -273,6 +244,9 @@ export default function MobileCart({ userData }) {
     }
     return acc; // No discount for this item
   }, 0);
+
+  // Ensure total calculation reflects discounts correctly
+  const grandTotal = total - totalDiscount - discountAmt;
 
   return (
     <Transition.Root show={isCartOpen} as={Fragment}>
@@ -475,7 +449,7 @@ export default function MobileCart({ userData }) {
                               type="text"
                               className="dark:bg-transparent outline-none w-[240px] 2xl:w-[300px] border-[1.4px] border-[#999999] p-2 py-2.5 text-[#7A7A7A] text-[11px] md:text-[14px] mb-1"
                               placeholder="Coupon Code"
-                              value={!coupon ? "" : coupon}
+                              value={coupon}
                               onChange={(e) => {
                                 setCoupon(e.target.value);
                               }}
@@ -514,18 +488,40 @@ export default function MobileCart({ userData }) {
                               {currency} {currency === "OMR" ? (total * 0.1).toFixed(2) : total}
                             </p>
                           </div>
+
                           {totalDiscount > 0 && (
                             <div className="flex items-center justify-between font-[600] plus-jakarta tetx-[#363F4D] text-[13.4px] 2xl text-[13px]:md:text-[14px]">
-                              <p>Discount</p>
+                              <p>Product Discount</p>
                               <p>
-                                {currency} {currency === "OMR" ? (totalDiscount * 0.1).toFixed(2) : totalDiscount}
+                                -{currency} {currency === "OMR" ? (totalDiscount * 0.1).toFixed(2) : totalDiscount}
                               </p>
                             </div>
                           )}
+
+                          {/* Subtotal after product discount */}
+                          <div className="mt-2 py-1 border-t-[1px] border-[#999999] flex items-center justify-between font-[600] plus-jakarta text-[13px] md:text-[14px]">
+                            <p>Amount after discount</p>
+                            <p>
+                              {currency} {currency === "OMR" ? ((total - totalDiscount) * 0.1).toFixed(2) : (total - totalDiscount)}
+                            </p>
+                          </div>
+
+                          {/* Display Coupon Discount */}
+                          {discountAmt > 0 && (
+                            <div className="flex items-center justify-between font-[600] plus-jakarta tetx-[#363F4D] text-[13.4px] 2xl text-[13px]:md:text-[14px]">
+                              <p>Coupon Discount</p>
+                              <p>
+                                -{currency} {currency === "OMR" ?
+                                  (discountAmt * 0.1).toFixed(2) :
+                                  discountAmt.toFixed(2)}
+                              </p>
+                            </div>
+                          )}
+
                           <div className="mt-3 py-1 border-t-[1px] border-[#999999] flex items-center justify-between font-[700] plus-jakarta text-[13px] md:text-[16px] 2xl:text-[18px]">
                             <p>Grand Total</p>
                             <p>
-                              {currency} {currency === "OMR" ? ((total - totalDiscount) * 0.1).toFixed(2) : (total - totalDiscount)}
+                              {currency} {currency === "OMR" ? (grandTotal * 0.1).toFixed(2) : grandTotal.toFixed(2)}
                             </p>
                           </div>
                         </div>

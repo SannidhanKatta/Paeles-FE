@@ -75,6 +75,8 @@ const Cart = () => {
           setTotal(total1);
           if (response.data.cart.couponDiscountedTotal != 0) {
             setDiscountAmt(total1 - response.data.cart.couponDiscountedTotal);
+          } else {
+            setDiscountAmt(0);
           }
         }
       } catch (error) {
@@ -239,46 +241,20 @@ const Cart = () => {
   const applyCoupon = async () => {
     const userId = userDetails._id;
     try {
-      // if (discountAmt !== 0) {
-      //   return toast("Other Coupon Already Applied.");
-      // }
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/cart/applyCoupon`,
         {
           userId: userId,
           couponCode: coupon,
-          total,
+          total: total - totalDiscount // Pass amount after product discount
         }
       );
-      sessionStorage.setItem("coupon", coupon);
+      sessionStorage.setItem("coupon", response.data.coupon.code);
+      setCouponName(response.data.coupon.code);
       if (response.data?.coupon?.discountType === "percentage") {
-        const total1 =
-          parseFloat(
-            cart?.reduce(
-              (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
-              0
-            ) * response.data?.coupon?.discountAmount
-          ) / 100;
-        const total2 = parseFloat(
-          cart?.reduce(
-            (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
-            0
-          ) *
-          (response.data?.coupon?.discountAmount * 0.01)
-        );
-        // // // console.log(total1);
-        // setTotal(total1);
-        // console.log("6");
-        setDiscountAmt(total2);
+        const discountAmount = ((total - totalDiscount) * (response.data.coupon.discountAmount / 100));
+        setDiscountAmt(discountAmount);
       } else if (response.data?.coupon?.discountType === "fixed") {
-        // const total1 =
-        //   cart?.reduce(
-        //     (acc, obj) => acc + obj?.updatedPrice * obj.quantity,
-        //     0
-        //   ) - response.data?.coupon?.discountAmount;
-        // // // console.log(total1);
-        // setTotal(total1);
-        // console.log("7");
         setDiscountAmt(response.data?.coupon?.discountAmount);
       }
       toast.success(response.data.message);
@@ -314,6 +290,17 @@ const Cart = () => {
       console.log(response.data.coupon);
       setCouponName(response.data.coupon.code);
       sessionStorage.setItem("coupon", response.data.coupon.code);
+      if (response.data.coupon) {
+        if (response.data.coupon.discountType === "percentage") {
+          const discountAmount = ((total - totalDiscount) * (response.data.coupon.discountAmount / 100));
+          setDiscountAmt(discountAmount);
+        } else if (response.data.coupon.discountType === "fixed") {
+          setDiscountAmt(response.data.coupon.discountAmount);
+        }
+      } else {
+        setCouponName(null);
+        setDiscountAmt(0);
+      }
     } catch (err) {
       setCouponName(null);
     }
@@ -641,7 +628,7 @@ const Cart = () => {
                       type="text"
                       className=" dark:bg-transparent w-[240px] 2xl:w-[300px] border-[1.4px] border-[#999999] p-2 text-[#7A7A7A] text-[13px] md:text-[14px]"
                       placeholder="Coupon Code"
-                      value={!coupon ? "" : coupon}
+                      value={coupon}
                       onChange={(e) => {
                         setCoupon(e.target.value);
                       }}
@@ -689,18 +676,42 @@ const Cart = () => {
                   </div>
 
                   {/* Display Total Discount */}
-                  <div className="flex items-center justify-between font-[600] plus-jakarta text-[#363F4D] text-[13.4px] 2xl text-[13px]:md:text-[14px]">
-                    <p>Discount</p>
+                  {totalDiscount > 0 && (
+                    <div className="flex items-center justify-between font-[600] plus-jakarta text-[#363F4D] text-[13.4px] 2xl text-[13px]:md:text-[14px]">
+                      <p>Product Discount</p>
+                      <p>
+                        -{currency} {currency === "OMR" ? (totalDiscount * 0.1).toFixed(2) : totalDiscount}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Subtotal after product discount */}
+                  <div className="mt-2 py-1 border-t-[1px] border-[#999999] flex items-center justify-between font-[600] plus-jakarta text-[13px] md:text-[14px]">
+                    <p>Amount after discount</p>
                     <p>
-                      {currency} {currency === "OMR" ? (totalDiscount * 0.1).toFixed(2) : totalDiscount}
+                      {currency} {currency === "OMR" ? ((total - totalDiscount) * 0.1).toFixed(2) : (total - totalDiscount)}
                     </p>
                   </div>
+
+                  {/* Display Coupon Discount */}
+                  {discountAmt > 0 && (
+                    <div className="flex items-center justify-between font-[600] plus-jakarta tetx-[#363F4D] text-[13.4px] 2xl text-[13px]:md:text-[14px]">
+                      <p>Coupon Discount</p>
+                      <p>
+                        -{currency} {currency === "OMR" ?
+                          (discountAmt * 0.1).toFixed(2) :
+                          discountAmt.toFixed(2)}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Grand Total Calculation */}
                   <div className="mt-3 py-1 border-t-[1px] border-[#999999] flex items-center justify-between font-[700] plus-jakarta text-[13px] md:text-[16px] 2xl:text-[18px]">
                     <p>Grand Total</p>
                     <p>
-                      {currency} {currency === "OMR" ? ((total - totalDiscount) * 0.1).toFixed(2) : (total - totalDiscount)}
+                      {currency} {currency === "OMR" ?
+                        ((total - totalDiscount - discountAmt) * 0.1).toFixed(2) :
+                        (total - totalDiscount - discountAmt).toFixed(2)}
                     </p>
                   </div>
                 </div>
