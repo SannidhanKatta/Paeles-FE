@@ -94,13 +94,13 @@ const Checkout = () => {
       productsToSend = cart.map(item => ({
         productId: item.productId._id,
         quantity: item.quantity,
-        price: item.updatedPrice,
+        price: item.productId.discountValue || item.updatedPrice,
         selectedSize: item.selectedSize
       }));
     }
 
     // Calculate final amount after all discounts
-    const finalAmount = Math.max(total - totalDiscount - discountAmt, 0);
+    const finalAmount = total;
 
     // Debug logs
     console.log("Products to send:", productsToSend);
@@ -246,20 +246,37 @@ const Checkout = () => {
       let totalAmount = 0;
       let totalDiscountAmount = 0;
 
+      // Calculate product totals and discounts
       cartData.products.forEach((item) => {
-        const price = item.updatedPrice;
-        const originalPrice = item.productId.price;
+        const originalPrice = item.updatedPrice;
+        const discountedPrice = item.productId.discountValue || originalPrice;
         const quantity = item.quantity;
-        totalAmount += price * quantity;
-        if (price !== originalPrice) {
-          totalDiscountAmount += (originalPrice - price) * quantity;
+
+        // Calculate total based on discounted price
+        totalAmount += discountedPrice * quantity;
+
+        // Calculate product discount if exists
+        if (item.productId.discountValue) {
+          totalDiscountAmount += (originalPrice - discountedPrice) * quantity;
         }
       });
 
-      setTotal(totalAmount);
-      setTotalDiscount(totalDiscountAmount);
-      setDiscountAmt(cartData.couponDiscountedTotal ? totalAmount - cartData.couponDiscountedTotal : 0);
+      // Set initial values
+      setSubTotal(totalAmount + totalDiscountAmount); // Original total before any discounts
+      setTotalDiscount(totalDiscountAmount); // Product discount amount
+      setTotal(totalAmount); // Amount after product discount
+
+      // Handle coupon discount if exists
+      if (cartData.couponDiscountedTotal && cartData.couponDiscountedTotal < totalAmount) {
+        const couponDiscountAmount = totalAmount - cartData.couponDiscountedTotal;
+        setDiscountAmt(couponDiscountAmount);
+        setTotal(cartData.couponDiscountedTotal); // Update total to include coupon discount
+      } else {
+        setDiscountAmt(0);
+      }
+
       setCoupon(cartData.couponId);
+      setCart(cartData.products);
     } catch (error) {
       console.error("Error fetching cart:", error);
     }
@@ -600,35 +617,47 @@ const Checkout = () => {
                         <p className="text-[#363F4D] dark:text-gray-400 text-[600]">
                           {item.quantity} x {currency}
                           {currency === "OMR"
-                            ? (discountedPrice * 1 * 0.1).toFixed(2)
-                            : discountedPrice * 1}
+                            ? (discountedPrice * 0.1).toFixed(2)
+                            : discountedPrice}
                         </p>
                       </div>
                     );
                   })}
                 </>
               )}
-              <div className=" mt-3 py-1 border-t-[1px] border-[#999999] dark:bg-transparent flex items-center justify-between font-[700] plus-jakarta text-[12.4px] md:text-[13px] 2xl:text-[14px]">
+
+              {/* Cart Summary Section */}
+              <div className="mt-3 py-1 border-t-[1px] border-[#999999] dark:bg-transparent flex items-center justify-between font-[700] plus-jakarta text-[12.4px] md:text-[13px] 2xl:text-[14px]">
                 <p>Sub Total</p>
-                <p>{currency} {currency === "OMR" ? (total * 0.1).toFixed(2) : total.toFixed(2)}</p>
+                <p>{currency} {currency === "OMR" ? (subTotal * 0.1).toFixed(2) : subTotal.toFixed(2)}</p>
               </div>
+
+              {/* Product Discount */}
               {totalDiscount > 0 && (
                 <div className="flex items-center justify-between font-[600] plus-jakarta text-[#363F4D] text-[13.4px] 2xl:text-[13px]:md:text-[14px]">
                   <p>Product Discount</p>
                   <p>-{currency} {currency === "OMR" ? (totalDiscount * 0.1).toFixed(2) : totalDiscount.toFixed(2)}</p>
                 </div>
               )}
+
+              {/* Amount after product discount */}
+              <div className="flex items-center justify-between font-[600] plus-jakarta text-[#363F4D] text-[13.4px] 2xl:text-[13px]:md:text-[14px]">
+                <p>Amount after discount</p>
+                <p>{currency} {currency === "OMR" ? ((subTotal - totalDiscount) * 0.1).toFixed(2) : (subTotal - totalDiscount).toFixed(2)}</p>
+              </div>
+
+              {/* Coupon Discount */}
               {discountAmt > 0 && (
                 <div className="flex items-center justify-between font-[600] plus-jakarta text-[#363F4D] text-[13.4px] 2xl:text-[13px]:md:text-[14px]">
                   <p>Coupon Discount</p>
                   <p>-{currency} {currency === "OMR" ? (discountAmt * 0.1).toFixed(2) : discountAmt.toFixed(2)}</p>
                 </div>
               )}
-              <div className=" mt-3 py-1 border-t-[1px] border-[#999999] flex items-center justify-between font-[700] plus-jakarta text-[13px] md:text-[16px] 2xl:text-[18px]">
+
+              {/* Grand Total */}
+              <div className="mt-3 py-1 border-t-[1px] border-[#999999] flex items-center justify-between font-[700] plus-jakarta text-[13px] md:text-[16px] 2xl:text-[18px]">
                 <p>Grand Total</p>
-                <p>{currency} {currency === "OMR" ?
-                  (Math.max(total - totalDiscount - discountAmt, 0) * 0.1).toFixed(2) :
-                  Math.max(total - totalDiscount - discountAmt, 0).toFixed(2)}</p>
+                <p>{currency} {currency === "OMR" ? (total * 0.1).toFixed(2) : total.toFixed(2)}</p>
               </div>
             </div>
           </div>

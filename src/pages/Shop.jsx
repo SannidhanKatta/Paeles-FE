@@ -70,13 +70,13 @@ const Shop = () => {
     buyNow,
     setBuyNow,
     setProductPageId,
+    setProducts,
   } = useContext(MainAppContext);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [sortMethod, setSortMethod] = useState(1);
   const [banners, setBanners] = useState([]);
   const [sortedArray, setSortedArray] = useState([]);
-  // const [Products, setProducts] = useState([]);
   const [userDetails, setUserDetails] = useState({});
 
   const [itemsPerPage, setItemsPerPage] = useState(12);
@@ -107,12 +107,14 @@ const Shop = () => {
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/products`);
       const products = response.data.products;
 
-      // Apply filters immediately after fetching
+      // Set the main Products state first
+      setProducts(products);
+
+      // Then filter and sort
       const filteredProducts = filterProducts(products);
       const sortedProducts = sortProducts(sortMethod, filteredProducts);
-
       setSortedArray(sortedProducts);
-      setProducts(products);
+
       return products;
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -124,11 +126,24 @@ const Shop = () => {
     const fetchInitialData = async () => {
       setLoading(true);
       try {
-        await Promise.all([
+        // Set initial filter states based on URL params
+        setFilterCategories(category ? category.toLowerCase() : "all");
+        setFilterSubCategories(subcategory ? subcategory.toLowerCase() : "all");
+
+        // Fetch all required data
+        const [categoriesRes, bannersRes, productsRes] = await Promise.all([
           getAllCategories(),
           getAllBanners(),
           getAllProducts()
         ]);
+
+        // Handle category-specific logic
+        if (category) {
+          const normalizedCategory = category.toLowerCase();
+          setOpenCategory(normalizedCategory);
+          setSelectedCategory(normalizedCategory);
+        }
+
       } catch (error) {
         console.error("Error fetching initial data:", error);
       } finally {
@@ -142,59 +157,39 @@ const Shop = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     setUserDetails(user);
     setWishlistedProducts(wishlist);
-  }, []);
-
-  // Separate useEffect for category/subcategory changes
-  useEffect(() => {
-    if (category || subcategory) {
-      setLoading(true);
-      setFilterCategories(category ? category.toLowerCase() : "all");
-      setFilterSubCategories(subcategory ? subcategory.toLowerCase() : "all");
-      getAllProducts().then(() => {
-        setLoading(false);
-      });
-    }
-  }, [category, subcategory]);
+  }, [category, subcategory]); // Add category and subcategory as dependencies
 
   useEffect(() => {
-    if (category) {
-      const normalizedCategory = category.toLowerCase();
-      setOpenCategory(normalizedCategory);
-      setSelectedCategory(normalizedCategory);
-    } else {
-      setOpenCategory(null);
-      setSelectedCategory(null);
+    if (Products?.length > 0) { // Only run if Products is populated
+      const filteredProducts = filterProducts(Products);
+      const sortedProducts = sortProducts(sortMethod, filteredProducts);
+      setSortedArray(sortedProducts);
     }
-  }, [category]);
+  }, [Products, sortMethod, filterCategories, filterSubCategories]);
 
   const filterProducts = (products) => {
-    if (!products) return [];
+    if (!products || !Array.isArray(products)) return [];
 
     return products.filter((product) => {
+      if (!product?.approved) return false;
+
       // Check if product matches category filter
       const matchesCategory =
         filterCategories === "all" ||
-        product?.mainCategory?.some(
+        (product?.mainCategory?.some(
           (cat) => cat.toLowerCase() === filterCategories.toLowerCase()
-        );
+        ));
 
       // Check if product matches subcategory filter
       const matchesSubcategory =
         filterSubCategories === "all" ||
-        product?.subCategory?.some(
+        (product?.subCategory?.some(
           (sub) => sub.toLowerCase() === filterSubCategories.toLowerCase()
-        );
+        ));
 
-      return matchesCategory && matchesSubcategory && product?.approved;
+      return matchesCategory && matchesSubcategory;
     });
   };
-
-  // Update the useEffect for sorting to include filtering
-  useEffect(() => {
-    const filteredProducts = filterProducts(Products);
-    const sortedProducts = sortProducts(sortMethod, filteredProducts);
-    setSortedArray(sortedProducts);
-  }, [Products, sortMethod, filterCategories, filterSubCategories]);
 
   // Update the sortProducts function to accept the products array
   const sortProducts = (method, productsToSort) => {
